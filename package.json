@@ -1,21 +1,15 @@
 {
   "name": "gaming_hub",
   "version": "1.0.0",
+  "main": "main.js",
   "scripts": {
-    "build": "tsc",
-    "watch": "tsc -w",
-    "lint": "eslint -c .eslintrc --ext .ts ./src",
-    "start": "npm run build && electron ./dist/main.js"
+    "start": "electron ."
   },
   "repository": "https://github.com/mathyc0de/Gaming-Hub",
-  "author": "mathyc0de",
+  "author": "mathyc0de <mateushackrs7@gmail.com>",
   "license": "MIT",
-  "devDependencies": {
-    "@typescript-eslint/eslint-plugin": "^4.33.0",
-    "@typescript-eslint/parser": "^4.33.0",
-    "electron": "^28.1.0",
-    "eslint": "^7.32.0",
-    "typescript": "^4.8.3"
-  },
-  "dependencies": {}
+  "dependencies": {
+    "electron": "^33.2.0",
+    "three": "^0.170.0"
+  }
 }
