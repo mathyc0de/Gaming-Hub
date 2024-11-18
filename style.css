@@ -37,18 +37,19 @@ body, html {
   align-items: center;
   height: max-content;
   width: max-content;
-  border: solid 0.4rem white;
+  border: solid 0.4rem black;
 }
 
 .card:hover {
   transform: scale(1.1);
-  box-shadow: 0 8px 16px 0 rgba(79, 252, 10, 0.952);
+  box-shadow: 5px 0px 30px 0 #ef8311;
 }
 
 .card img {
   height: 10rem;
   width: max-content;
   transition: 0.3s;
+  margin-bottom: 5px;
 }
 
 .card img:hover {
@@ -58,8 +59,9 @@ body, html {
 .card h1{
   width: 100%;
   margin: 0;
-  color: white;
+  color: #ef8311;
   text-align: center;
+  background-color: rgba(0, 0, 0, 0.6)
 }
 
 .element {

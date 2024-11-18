@@ -23,7 +23,7 @@ class Background {
     render() {
         this.renderer.setSize(this.sizes.width, this.sizes.height);
         const geometry = new THREE.BoxGeometry();
-        const material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
+        const material = new THREE.MeshBasicMaterial({ color: 0xef8311 });
         this.cube = new THREE.Mesh(geometry, material);
         this.scene.add(this.cube);
         this.camera.position.z = 5;
