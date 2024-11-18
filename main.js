@@ -17,7 +17,7 @@ function createWindow() {
     width: 800,
     height: 600,
     fullscreen: true,
-    frame: true,
+    frame: false,
     webPreferences: {
       preload: path.join(__dirname, './src/preload.js'),
       contextIsolation: false,

@@ -19,31 +19,41 @@ body, html {
 }
 
 /* Style for the card elements */
-.card {
+.games {
   display: flex;
+  flex-direction: row;
   position: relative;
   top: 40%;
   margin-left: 5rem;
   margin-right: 5rem;
   height: 10rem;
 }
-.card img {
-  width: 6rem; /* Adjust as needed */
-  height: 6rem;
-  margin: 3rem;
-  border: solid 0.1rem white;
-  /* border-radius: 8px; Optional: Add rounded corners to the image */
+
+.card {
+  height: inherit;
+  display: flex;
+  flex-direction: column;
   margin-right: 1rem; /* Space between image and text */
+  width: 10rem;
+  border: solid 0.4rem white;
+}
+
+.card img {
+  transition: 0.3s;
+}
+
+.card img:hover {
+  box-shadow: 0 8px 16px 0 rgba(79, 252, 10, 0.952);
 }
 
 .card h1{
+  margin: 0;
   color: white;
-  margin: 30px;
-  padding: 0.5rem 0;
+  text-align: center;
 }
 
 .element {
   color: white;
   margin: 30px;
-  padding: 0.5rem 0;
+  padding: 2px 16px;
 }
