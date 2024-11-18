@@ -4,7 +4,8 @@ body, html {
   padding: 0;
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  overflow: hidden; 
+  
 }
 
 /* Container for the canvas */
@@ -26,27 +27,36 @@ body, html {
   top: 40%;
   margin-left: 5rem;
   margin-right: 5rem;
-  height: 10rem;
+  height: max-content;
+  gap: 10px;
 }
 
 .card {
-  height: inherit;
   display: flex;
   flex-direction: column;
-  margin-right: 1rem; /* Space between image and text */
-  width: 10rem;
+  align-items: center;
+  height: max-content;
+  width: max-content;
   border: solid 0.4rem white;
 }
 
+.card:hover {
+  transform: scale(1.1);
+  box-shadow: 0 8px 16px 0 rgba(79, 252, 10, 0.952);
+}
+
 .card img {
+  height: 10rem;
+  width: max-content;
   transition: 0.3s;
 }
 
 .card img:hover {
-  box-shadow: 0 8px 16px 0 rgba(79, 252, 10, 0.952);
+  /* box-shadow: 0 8px 16px 0 rgba(79, 252, 10, 0.952); */
 }
 
 .card h1{
+  width: 100%;
   margin: 0;
   color: white;
   text-align: center;

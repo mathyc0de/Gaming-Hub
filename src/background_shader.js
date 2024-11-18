@@ -14,6 +14,7 @@ class Background {
         this.camera = new THREE.PerspectiveCamera(75, this.sizes.width / this.sizes.height, 0.1, 1000);
         const canvas = this.canvas = document.querySelector('.webgl')
         this.renderer = new THREE.WebGLRenderer({canvas});
+        this.renderer.setClearColor(0x0005f);
         this.render()
         this.animate = this.animate.bind(this); // Bind the animate method to the correct context
     }
