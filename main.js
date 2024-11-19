@@ -19,7 +19,7 @@ function createWindow() {
     fullscreen: true,
     frame: false,
     webPreferences: {
-      preload: path.join(__dirname, './src/preload.js'),
+      preload: path.join(__dirname, './src/scripts/shared/preload.js'),
       contextIsolation: false,
       enableRemoteModule: false,
       nodeIntegration: true
@@ -47,11 +47,16 @@ app.on('activate', () => {
 ipcMain.on('exit-fullscreen', () => {
   if (mainWindow.isVisible()) {
     mainWindow.hide()
-    tray = new Tray("./assets/icon.png")
+    tray = new Tray("./src/assets/icon.png")
     tray.on('click', () => createWindow())
       const contextMenu = Menu.buildFromTemplate([
           { label: "Sair", type: "normal", click: () => app.quit()},
       ]);
   tray.setContextMenu(contextMenu)
   }
+});
+
+
+ipcMain.on('load-local-url', (event, url) => {
+  mainWindow.loadURL(url);
 });
