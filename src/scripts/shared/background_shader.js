@@ -14,7 +14,7 @@ class Background {
         this.camera = new THREE.PerspectiveCamera(75, this.sizes.width / this.sizes.height, 0.1, 1000);
         const canvas = this.canvas = document.querySelector('.webgl')
         this.renderer = new THREE.WebGLRenderer({canvas});
-        this.renderer.setClearColor(0x0005f);
+        this.renderer.setClearColor(0x6a041a);
         this.render()
         this.animate = this.animate.bind(this); // Bind the animate method to the correct context
     }
@@ -23,7 +23,7 @@ class Background {
     render() {
         this.renderer.setSize(this.sizes.width, this.sizes.height);
         const geometry = new THREE.BoxGeometry();
-        const material = new THREE.MeshBasicMaterial({ color: 0xef8311 });
+        const material = new THREE.MeshBasicMaterial({ color: 0xffffff});
         this.cube = new THREE.Mesh(geometry, material);
         this.scene.add(this.cube);
         this.camera.position.z = 5;

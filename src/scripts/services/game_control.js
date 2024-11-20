@@ -4,7 +4,7 @@ let currentIndex = 0
 document.addEventListener("DOMContentLoaded", () => {
     gameCard[0].style.transition = "0.3s"
     gameCard[0].style.transform = "scale(1.3)"
-    gameCard[0].style.boxShadow = "5px 0px 30px 0 #ef8311"
+    gameCard[0].style.boxShadow = "5px 0px 30px 0 #ffffff"
     gameCard[0].style.cursor = "pointer"
 })
 
@@ -29,6 +29,6 @@ const gameControl = () => {
     const currentCard = gameCard[currentIndex]
     currentCard.style.transition = "0.3s"
     currentCard.style.transform = "scale(1.3)"
-    currentCard.style.boxShadow = "5px 0px 30px 0 #ef8311"
+    currentCard.style.boxShadow = "5px 0px 30px 0 #ffffff"
     currentCard.style.cursor = "pointer"
 }
