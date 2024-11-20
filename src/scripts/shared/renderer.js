@@ -1,5 +1,6 @@
 const { ipcRenderer } = require('electron');
 const { Background } = require('./src/scripts/shared/background_shader.js');
+const { getSteamIDs } = require('./src/scripts/services/find_games.js');
 
 let bg;
 
@@ -19,6 +20,7 @@ function main() {
         ipcRenderer.send('load-local-url', "steam://rungameid/413150")
         // Add your logic here
     });
+    getSteamIDs()
     
 }
 
