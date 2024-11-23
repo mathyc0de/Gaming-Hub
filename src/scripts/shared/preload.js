@@ -2,13 +2,14 @@ const fs = require('fs')
 const { GameData } = require('../services/find_games');
 const {CardAnimationController} = require('../services/game_control')
 const { ipcRenderer } = require('electron');
+const { join } = require('path')
 
 let gameData = new GameData()
 
 
 
 function loadGames() {
-  var data = fs.readFileSync('./game_data.json')
+  var data = fs.readFileSync(join(gameData.lib.APPDATA, 'game_data.json'))
   data = JSON.parse(data)
   for (let idx = 0; idx < data.length; idx++) {
     const parent = document.querySelector('.games')
@@ -29,8 +30,9 @@ function loadGames() {
     parent.appendChild(card)
   }
 }
-window.addEventListener('DOMContentLoaded', async () => {
-  gameData.writeData().then((val) => {gameData = null})
-  loadGames()
-  const animationController = new CardAnimationController(document.querySelectorAll('.card'))
+gameData.writeData()
+
+window.addEventListener('DOMContentLoaded', () => {
+    loadGames()
+    const animationController = new CardAnimationController(document.querySelectorAll('.card'))
   });

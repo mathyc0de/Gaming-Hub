@@ -1,15 +1,16 @@
 const fs = require('fs')
 const path = require('path')
 const { homedir } = require('os')
-const { app } = require('electron')
 let lib
 
 
 
-function getLib() {                
+function getLib() {    
+    const homeDir = homedir()
     switch (process.platform) {
         case 'win32':
             lib = {
+            APPDATA: path.join(homeDir, "AppData/Local/gaming_hub"),
             STEAM: "C:/Program Files (x86)/Steam/steamapps/",
             EPIC: "com.epicgames.launcher://apps/",
             UPLAY: "uplay://launch/",
@@ -20,9 +21,9 @@ function getLib() {
         case 'darwin':
             break;
         case 'linux':
-            const homeDir = homedir();
             lib = {
-                STEAM: path.join(homeDir, ".local/share/Steam/steamapps/"),
+                APPDATA: path.join(homeDir, "/.local/share/gaming_hub/"),
+                STEAM: path.join(homeDir, "/.local/share/Steam/steamapps/"),
                 EPIC: "com.epicgames.launcher://apps/",
                 UPLAY: "uplay://launch/",
                 ORIGIN: "origin://launchgame/",
@@ -30,6 +31,7 @@ function getLib() {
             }
             break;
     }
+    return lib;
 }
 
 
@@ -102,7 +104,7 @@ class SteamGames {
 
 class GameData {
     constructor() {
-        getLib()
+        this.lib = getLib()
         this.steamData = []
         this.epicData = []
         this.uplayData = []
@@ -118,7 +120,7 @@ class GameData {
     async writeData() {
         await this.#getSteamData()
         const json = JSON.stringify(this.steamData)
-        fs.writeFileSync('./game_data.json',json, 'utf8')
+        fs.writeFileSync(lib.APPDATA + 'game_data.json',json, 'utf8')
     }
 }
 
