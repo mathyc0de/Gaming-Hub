@@ -1,38 +1,9 @@
 const fs = require('fs')
 const path = require('path')
-const { homedir } = require('os')
 let lib
-
-
-
-function getLib() {    
-    const homeDir = homedir()
-    switch (process.platform) {
-        case 'win32':
-            lib = {
-            APPDATA: path.join(homeDir, "AppData/Local/gaming_hub"),
-            STEAM: "C:/Program Files (x86)/Steam/steamapps/",
-            EPIC: "com.epicgames.launcher://apps/",
-            UPLAY: "uplay://launch/",
-            ORIGIN: "origin://launchgame/",
-            STANDALONE: "STANDALONE"
-            }
-            break;
-        case 'darwin':
-            break;
-        case 'linux':
-            lib = {
-                APPDATA: path.join(homeDir, "/.local/share/gaming_hub/"),
-                STEAM: path.join(homeDir, "/.local/share/Steam/steamapps/"),
-                EPIC: "com.epicgames.launcher://apps/",
-                UPLAY: "uplay://launch/",
-                ORIGIN: "origin://launchgame/",
-                STANDALONE: "STANDALONE"
-            }
-            break;
-    }
-    return lib;
-}
+const env = process.env
+const APP_PATH = env.APP_PATH
+const STEAM_PATH = env.STEAM
 
 
 const launch = {
@@ -61,7 +32,7 @@ class SteamGames {
        return apps 
     }
 
-    #parseACF(path = lib.STEAM) {
+    #parseACF(path = STEAM_PATH) {
         const files = fs.readdirSync(path)
         const acfFiles = files.filter(file => file.endsWith('.acf'));
         return this.#extractData(acfFiles, path)
@@ -96,15 +67,12 @@ class SteamGames {
 
     async fetchGames() {
         await this.#getSteamIDs()
-        // const json = JSON.stringify(this.steamData)
-        // fs.writeFileSync('./game_data.json',json, 'utf8')
         return this.steamData
     }
 }
 
 class GameData {
     constructor() {
-        this.lib = getLib()
         this.steamData = []
         this.epicData = []
         this.uplayData = []
@@ -120,7 +88,8 @@ class GameData {
     async writeData() {
         await this.#getSteamData()
         const json = JSON.stringify(this.steamData)
-        fs.writeFileSync(lib.APPDATA + 'game_data.json',json, 'utf8')
+        console.log(APP_PATH + 'game_data.json')
+        fs.writeFileSync(APP_PATH + 'game_data.json',json, 'utf8')
     }
 }
 

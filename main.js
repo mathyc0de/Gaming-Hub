@@ -1,5 +1,6 @@
 const { app, BrowserWindow, Tray, Menu, ipcMain } = require('electron');
 const path = require('path');
+require('dotenv').config()
 
 try {
   require('electron-reloader')(module)

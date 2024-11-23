@@ -9,6 +9,7 @@
   "author": "mathyc0de <mateushackrs7@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "dotenv": "^16.4.5",
     "electron": "^33.2.0",
     "three": "^0.170.0"
   },

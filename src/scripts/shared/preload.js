@@ -9,8 +9,9 @@ let gameData = new GameData()
 
 
 function loadGames() {
-  var data = fs.readFileSync(join(gameData.lib.APPDATA, 'game_data.json'))
+  var data = fs.readFileSync(join(process.env.APP_PATH, 'game_data.json'))
   data = JSON.parse(data)
+  console.log(data)
   for (let idx = 0; idx < data.length; idx++) {
     const parent = document.querySelector('.games')
     const card = document.createElement('div')
@@ -30,9 +31,7 @@ function loadGames() {
     parent.appendChild(card)
   }
 }
-gameData.writeData()
-
-window.addEventListener('DOMContentLoaded', () => {
-    loadGames()
-    const animationController = new CardAnimationController(document.querySelectorAll('.card'))
-  });
+gameData.writeData().then((value) => {
+  loadGames()
+  const animationController = new CardAnimationController(document.querySelectorAll('.card'))
+})
