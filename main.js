@@ -6,6 +6,10 @@ try {
   require('electron-reloader')(module)
 } catch (_) {}
 
+if (!process.env.APP_PATH) {
+  console.log("Run setup.ps1(Windows) or setup.sh(Linux) before execute")
+  app.quit()
+}
 
 let mainWindow;
 let tray;
