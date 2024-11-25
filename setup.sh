@@ -6,7 +6,7 @@ STEAM_PATH="$HOME/.steam/steam/steamapps/"
 
 # Cria a pasta gaming_hub se não existir
 if [ ! -d "$APP_PATH" ]; then
-    mkdir -p "$APP_PATH"
+    mkdir -p "$APP_PATH/assets/images"
     echo "Pasta criada: $APP_PATH"
 else
     echo "A pasta já existe: $APP_PATH"
