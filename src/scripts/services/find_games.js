@@ -1,4 +1,6 @@
+const { app } = require('electron');
 const fs = require('fs')
+const download = require('image-downloader');
 const path = require('path')
 let lib
 const env = process.env
@@ -14,7 +16,12 @@ const launch = {
     STANDALONE: "STANDALONE"
 }
 
-
+function downloadImage(url, filepath) {
+    return download.image({
+       url,
+       dest: filepath 
+    });
+}
 class SteamGames {
     constructor() {
         this.steamData = []
@@ -38,10 +45,6 @@ class SteamGames {
         return this.#extractData(acfFiles, path)
     }
 
-    #downloadImage(url) {
-        return
-      }
-
     async #getSteamIDs() {
         const apps = this.#parseACF();
         for (let idx = 0; idx < apps.length; idx++) {
@@ -53,9 +56,8 @@ class SteamGames {
                 continue
             }
             const img = content.data.header_image
+            downloadImage(img, path.join(process.env.APP_PATH, appid + '.jpg'))
             const script =  launch.STEAM + appid
-            // const imgPath = path.join(homedir(), ".local/share/gaming_hub/images/")
-            // this.#downloadImage(img, imgPath)
             this.steamData.push({
                 name: content.data.name,
                 image: img,
