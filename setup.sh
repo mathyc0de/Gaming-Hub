@@ -2,7 +2,7 @@
 
 # Define os caminhos necessários
 APP_PATH="$HOME/.local/share/gaming_hub/"
-STEAM_PATH="$HOME/.local/share/Steam/steamapps/"
+STEAM_PATH="$HOME/.steam/steam/steamapps/"
 
 # Cria a pasta gaming_hub se não existir
 if [ ! -d "$APP_PATH" ]; then
