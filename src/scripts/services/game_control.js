@@ -22,6 +22,8 @@ class CardAnimationController {
         this.gameCard[0].style.transform = "scale(1.3)"
         this.gameCard[0].style.boxShadow = "5px 0px 30px 0 #ffffff"
         this.gameCard[0].style.cursor = "pointer"
+        this.gameCard[0].style.margin = "0 50px"
+
     }
 
 
@@ -30,12 +32,14 @@ class CardAnimationController {
             card.style.transform = "scale(1)"
             card.style.boxShadow = "none"
             card.style.cursor = "pointer"
+            card.style.margin = "0"
         })
         const currentCard = this.gameCard[this.currentIndex]
         currentCard.style.transition = "0.3s"
         currentCard.style.transform = "scale(1.3)"
         currentCard.style.boxShadow = "5px 0px 30px 0 #ffffff"
         currentCard.style.cursor = "pointer"
+        currentCard.style.margin = "0 50px"
     }
 }
 
