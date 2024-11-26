@@ -25,9 +25,6 @@ class Background {
         this.renderer.setSize(this.sizes.width, this.sizes.height);
         const geometry = new THREE.IcosahedronGeometry(1,30);
         const material = new THREE.ShaderMaterial({
-            uniforms: {
-                uRadius: 0.5
-            },
             vertexShader: vertex,
             fragmentShader: fragment
             });
