@@ -5,7 +5,6 @@ let bg;
 
 function main() {
     bg = new Background()
-    bg.animate()
 
 
     window.addEventListener('keydown', (event) => {

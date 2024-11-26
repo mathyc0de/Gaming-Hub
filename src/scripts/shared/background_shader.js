@@ -1,8 +1,7 @@
-// background_shader.js
-
-const THREE = require('three');
-
-
+const THREE = require('three')
+var loader = new THREE.FileLoader();
+let vertex;
+let fragment;
 
 class Background {
     constructor() {
@@ -15,25 +14,26 @@ class Background {
         const canvas = this.canvas = document.querySelector('.webgl')
         this.renderer = new THREE.WebGLRenderer({canvas});
         this.renderer.setClearColor(0x6a041a);
-        this.render()
-        this.animate = this.animate.bind(this); // Bind the animate method to the correct context
+        this.loadShaders().then(() => this.render())
     }
 
-
+    async loadShaders() {
+        vertex = await loader.loadAsync('./shaders/vertex.glsl')
+        fragment = await loader.loadAsync('./shaders/fragment.glsl')
+    }
     render() {
         this.renderer.setSize(this.sizes.width, this.sizes.height);
-        const geometry = new THREE.BoxGeometry();
-        const material = new THREE.MeshBasicMaterial({ color: 0xffffff});
+        const geometry = new THREE.IcosahedronGeometry(1,30);
+        const material = new THREE.ShaderMaterial({
+            uniforms: {
+                uRadius: 0.5
+            },
+            vertexShader: vertex,
+            fragmentShader: fragment
+            });
         this.cube = new THREE.Mesh(geometry, material);
         this.scene.add(this.cube);
         this.camera.position.z = 5;
-        this.renderer.render(this.scene, this.camera);
-    }
-
-    animate() {
-        requestAnimationFrame(this.animate);
-        this.cube.rotation.x += 0.01;
-        this.cube.rotation.y += 0.01;
         this.renderer.render(this.scene, this.camera);
     }
 
