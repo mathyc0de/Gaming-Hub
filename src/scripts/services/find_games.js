@@ -1,19 +1,8 @@
 const fs = require('fs')
 const { Steam } = require('./launchers/steam')
-const download = require('image-downloader');
-const path = require('path');
 const { Uplay } = require('./launchers/uplay');
 const { Origin } = require('./launchers/eagames');
 const { Epic } = require('./launchers/epic');
-
-
-const launch = {
-    STEAM: "steam://rungameid/",
-    EPIC: "com.epicgames.launcher://apps/",
-    UPLAY: "uplay://launch/",
-    ORIGIN: "origin://launchgame/",
-    STANDALONE: "STANDALONE"
-}
 
 class GameData {
     constructor() {

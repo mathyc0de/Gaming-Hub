@@ -1,7 +1,5 @@
-const { Console } = require('console');
 const fs = require('fs')
 const download = require('image-downloader');
-const { type } = require('os');
 const path = require('path')
 const launch = "steam://rungameid/"
 
