@@ -17,6 +17,7 @@ function loadGames() {
     const card = document.createElement('div')
     card.className = 'card'
     card.id = data[idx].name
+    card.tabIndex = 0
     card.addEventListener('click', () => {
       console.log('stardew clicked');
       ipcRenderer.send('load-local-url', data[idx].script)
@@ -33,5 +34,5 @@ function loadGames() {
 }
 gameData.writeData().then((value) => {
   loadGames()
-  const animationController = new CardAnimationController(document.querySelectorAll('.card'))
+  const animationController = new CardAnimationController(document.querySelectorAll('.card'), document.getElementById("nav-tools"))
 })
