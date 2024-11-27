@@ -30,7 +30,7 @@ function createWindow() {
       nodeIntegration: true
     }
   });
-  mainWindow.loadFile('index.html');
+  mainWindow.loadFile('./src/pages/home_page.html');
   mainWindow.webContents.openDevTools()
   mainWindow.on('resize', () => {})
 }
@@ -43,11 +43,11 @@ app.on('window-all-closed', () => {
   }
 });
 
-app.on('activate', () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
-  }
-});
+// app.on('activate', () => {
+//   if (BrowserWindow.getAllWindows().length === 0) {
+//     createWindow();
+//   }
+// });
 
 ipcMain.on('exit-fullscreen', () => {
   if (mainWindow.isVisible()) {

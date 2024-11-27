@@ -109,3 +109,12 @@ body, html {
 .nav-tools i:hover {
   color: #ffffff; /* Change icon color on hover */
 }
+
+.config-form {
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  position: relative;
+  left: 50%;
+  top: 50%;
+}

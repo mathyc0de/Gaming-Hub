@@ -1,5 +1,5 @@
 const { ipcRenderer } = require('electron');
-const { Background } = require('./src/scripts/shared/background_shader.js');
+const { Background } = require('../scripts/shared/background_shader.js');
 
 let bg;
 
