@@ -28,20 +28,38 @@ function loadGames() {
         ipcRenderer.send('load-local-url', data[lib][idx].script)
         // Add your logic here
     });
-      const img = document.createElement('img')
-      img.src = data[lib][idx].image
-      const title = document.createElement('h1')
-      title.textContent = 'Start'
-      card.appendChild(img)
-      card.appendChild(title)
-      parent.appendChild(card)
+    const img = document.createElement('img')
+    img.src = data[lib][idx].image
+    // const title = document.createElement('h1')
+    // title.textContent = 'Start'
+    card.appendChild(img)
+    // card.appendChild(title)
+    parent.appendChild(card)
+
+    card.addEventListener('focus', () => {
+      if (!card.querySelector('h1')) {  // Prevent adding title multiple times
+        const title = document.createElement('h1')
+        title.textContent = 'Start'
+        card.appendChild(title)
+        title.addEventListener('animationend', () => {
+          card.style.boxShadow = '5px 0px 30px 0 #ffffff';
+        });
+      }
+    })
+
+    card.addEventListener('blur', () => {
+      const title = card.querySelector('h1')
+      if (title) {
+        card.removeChild(title)
+        card.style.boxShadow = ''
+      }
+    })
     }
   });
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-gameData.writeData().then((value) => {
-  loadGames()
-  const animationController = new CardAnimationController(document.querySelectorAll('.card'))
-})
-})
+  gameData.writeData().then((value) => {
+    loadGames()
+    const animationController = new CardAnimationController(document.querySelectorAll('.card'), document.getElementById("nav-tools"))
+  })})
