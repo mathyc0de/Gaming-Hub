@@ -31,7 +31,6 @@ function createWindow() {
     }
   });
   mainWindow.loadFile('index.html');
-  mainWindow.webContents.openDevTools()
   mainWindow.on('resize', () => {})
 }
 
@@ -43,11 +42,11 @@ app.on('window-all-closed', () => {
   }
 });
 
-app.on('activate', () => {
-  if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
-  }
-});
+// app.on('activate', () => {
+//   if (BrowserWindow.getAllWindows().length === 0) {
+//     createWindow();
+//   }
+// });
 
 ipcMain.on('exit-fullscreen', () => {
   if (mainWindow.isVisible()) {
@@ -65,3 +64,9 @@ ipcMain.on('exit-fullscreen', () => {
 ipcMain.on('load-local-url', (event, url) => {
   mainWindow.loadURL(url);
 });
+
+ipcMain.on('open-dev-tools', () => {
+  if (!mainWindow.webContents.isDevToolsOpened()) {
+    mainWindow.webContents.openDevTools()
+  }
+})

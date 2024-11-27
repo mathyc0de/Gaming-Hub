@@ -10,7 +10,7 @@ function main() {
     window.addEventListener('keydown', (event) => {
         if (event.key === 'Escape') {
           ipcRenderer.send('exit-fullscreen')}});
-    window.addEventListener('resize', () => bg.resize())
+    // window.addEventListener('resize', () => bg.resize())
     // fetch_games()
 }
 

@@ -45,3 +45,29 @@ gameData.writeData().then((value) => {
   const animationController = new CardAnimationController(document.querySelectorAll('.card'))
 })
 })
+
+
+
+
+
+
+
+
+
+
+// DEBUG
+window.addEventListener('keydown', (event) => {
+  if (event.key === 'q') {
+    const element = document.querySelector('.games')
+    if (element.style.display != 'none') {
+    element.style.display = 'none' 
+    return
+  }
+  element.style.display = 'flex'
+  }});
+
+
+  window.addEventListener('keydown', (event) => {
+    if (event.key === 'F12') {
+      ipcRenderer.send('open-dev-tools')
+    }});
