@@ -5,17 +5,19 @@ class CardAnimationController {
         this.setCardsFocus()
 
         document.addEventListener("keydown", (keyPressed) => {
-            if (keyPressed.key === "ArrowRight") {
-                this.tabKeySimulation()
-            }
-            else if (keyPressed.key === "ArrowLeft") {
-                this.sTabKeySimulation()
-            } 
-            else if ((keyPressed.key === "ArrowUp") && (this.cardsFocused)){
-                this.setNavBarFocus()
-            }
-            else if ((keyPressed.key === "ArrowDown") && (this.navbarFocused)){
-                this.setCardsFocus()
+            switch (keyPressed.key) {
+                case "ArrowRight":
+                    this.tabKeySimulation(keyPressed.key)
+                    break;
+                case "ArrowLeft":
+                    this.sTabKeySimulation(keyPressed.key)
+                    break;
+                case "ArrowUp":
+                    if (this.cardsFocused) this.setNavBarFocus(keyPressed.key)
+                    break
+                case "ArrowDown":
+                    if (this.navbarFocused) this.setCardsFocus(keyPressed.key)
+                    break
             }
         })
     }
@@ -65,14 +67,14 @@ class CardAnimationController {
         tabbableElements[nextIndex]?.focus()
     }
 
-    sTabKeySimulation(){
+    sTabKeySimulation(keyPressed){
         // I only know what it does, not how.
         const tabbableElements = Array.from(document.querySelectorAll(`
             a[href], button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])
         `)).filter(el => el.tabIndex !== -1 && !el.disabled && el.offsetParent !== null)
         const focusedElement = document.activeElement
         const currentIndex = tabbableElements.indexOf(focusedElement)
-        const nextIndex = event.key === 'ArrowRight'
+        const nextIndex = keyPressed === 'ArrowRight'
             ? (currentIndex + 1) % tabbableElements.length
             : (currentIndex - 1 + tabbableElements.length) % tabbableElements.length
         tabbableElements[nextIndex]?.focus()
