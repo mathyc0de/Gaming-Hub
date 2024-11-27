@@ -17,7 +17,6 @@ function loadGames() {
     const card = document.createElement('div')
     card.className = 'card'
     card.id = data[idx].name
-    card.tabIndex = 0
     card.addEventListener('click', () => {
       console.log('stardew clicked');
       ipcRenderer.send('load-local-url', data[idx].script)
@@ -25,11 +24,31 @@ function loadGames() {
   });
     const img = document.createElement('img')
     img.src = data[idx].image
-    const title = document.createElement('h1')
-    title.textContent = 'Start'
+    // const title = document.createElement('h1')
+    // title.textContent = 'Start'
     card.appendChild(img)
-    card.appendChild(title)
+    // card.appendChild(title)
     parent.appendChild(card)
+
+    card.addEventListener('focus', () => {
+      if (!card.querySelector('h1')) {  // Prevent adding title multiple times
+        const title = document.createElement('h1')
+        title.textContent = 'Start'
+        card.appendChild(title)
+        title.addEventListener('animationend', () => {
+          card.style.boxShadow = '5px 0px 30px 0 #ffffff';
+        });
+      }
+    })
+
+    card.addEventListener('blur', () => {
+      const title = card.querySelector('h1')
+      if (title) {
+        card.removeChild(title)
+        card.style.boxShadow = ''
+      }
+    })
+    
   }
 }
 gameData.writeData().then((value) => {
