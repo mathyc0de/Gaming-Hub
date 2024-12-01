@@ -2,7 +2,15 @@ const fs = require('fs')
 const { join } = require('path')
 
 
-const path = 'C:/'
+let path
+switch (process.platform) {
+    case 'linux':
+        path = '/home/'
+        break;
+    case 'win32':
+        path = 'C:/'
+        break;
+}
 const parent = document.querySelector('.folders')
 
 const updateFolders = function (path) {
