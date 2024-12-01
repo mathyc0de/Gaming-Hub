@@ -1,15 +1,23 @@
 class CardAnimationController {
     constructor(gameCard, navTools) {
+        this.cardCarousel = document.getElementById('games')
         this.gameCard = gameCard
         this.navToolsChildren = Array.from(navTools.children)
         this.setCardsFocus()
+        this.currentIndex = 1
 
         document.addEventListener("keydown", (keyPressed) => {
             switch (keyPressed.key) {
                 case "ArrowRight":
+                    // Menu scrolling shenanigans
+                    this.currentIndex = (this.currentIndex + 1) % this.gameCard.length
+                    this.updateMenu()
                     this.tabKeySimulation(keyPressed.key)
                     break;
                 case "ArrowLeft":
+                    // Menu scrolling shenanigans
+                    this.currentIndex = (this.currentIndex - 1 + this.gameCard.length) % this.gameCard.length
+                    this.updateMenu()
                     this.sTabKeySimulation(keyPressed.key)
                     break;
                 case "ArrowUp":
@@ -78,6 +86,21 @@ class CardAnimationController {
             ? (currentIndex + 1) % tabbableElements.length
             : (currentIndex - 1 + tabbableElements.length) % tabbableElements.length
         tabbableElements[nextIndex]?.focus()
+    }
+
+
+    updateMenu() {
+        // Calculate the position to center the selected item in the second slot
+        const itemWidth = this.gameCard[0].offsetWidth
+        const offset = -(this.currentIndex - 1) * (itemWidth + 20)
+        
+        // Update the menu container's position
+        this.cardCarousel.style.transform = `translateX(${offset}px)`
+
+        // Set the focused item
+        this.gameCard.forEach((item, index) => {
+            item.classList.toggle('focused', index === this.currentIndex)
+        })
     }
 }
 
