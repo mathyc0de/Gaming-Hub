@@ -9,14 +9,15 @@ class CardAnimationController {
         document.addEventListener("keydown", (keyPressed) => {
             switch (keyPressed.key) {
                 case "ArrowRight":
-                    // Menu scrolling shenanigans
-                    this.currentIndex = (this.currentIndex + 1) % this.gameCard.length
+                    // CardCarousel next index counter
+                    this.currentIndex = ((this.currentIndex + 1) % this.gameCard.length) ? (this.currentIndex + 1) % this.gameCard.length : 6
+                    console.log(this.gameCard.length)
                     this.updateMenu()
                     this.tabKeySimulation(keyPressed.key)
                     break;
                 case "ArrowLeft":
                     // Menu scrolling shenanigans
-                    this.currentIndex = (this.currentIndex - 1 + this.gameCard.length) % this.gameCard.length
+                    this.currentIndex = ((this.currentIndex - 1 + this.gameCard.length) % this.gameCard.length) ? ((this.currentIndex - 1 + this.gameCard.length) % this.gameCard.length) : 6
                     this.updateMenu()
                     this.sTabKeySimulation(keyPressed.key)
                     break;
@@ -92,7 +93,10 @@ class CardAnimationController {
     updateMenu() {
         // Calculate the position to center the selected item in the second slot
         const itemWidth = this.gameCard[0].offsetWidth
+        console.log("Current index: " + this.currentIndex)
         const offset = -(this.currentIndex - 1) * (itemWidth + 20)
+        console.log("Offset: " + offset)
+        console.log("item width:" + itemWidth)
         
         // Update the menu container's position
         this.cardCarousel.style.transform = `translateX(${offset}px)`
