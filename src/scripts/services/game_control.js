@@ -9,16 +9,11 @@ class CardAnimationController {
         document.addEventListener("keydown", (keyPressed) => {
             switch (keyPressed.key) {
                 case "ArrowRight":
-                    // CardCarousel next index counter
-                    this.currentIndex = ((this.currentIndex + 1) % this.gameCard.length) ? (this.currentIndex + 1) % this.gameCard.length : 6
-                    console.log(this.gameCard.length)
-                    this.updateMenu()
+                    this.FixSecondCard('right')
                     this.tabKeySimulation(keyPressed.key)
                     break;
                 case "ArrowLeft":
-                    // Menu scrolling shenanigans
-                    this.currentIndex = ((this.currentIndex - 1 + this.gameCard.length) % this.gameCard.length) ? ((this.currentIndex - 1 + this.gameCard.length) % this.gameCard.length) : 6
-                    this.updateMenu()
+                    this.FixSecondCard()
                     this.sTabKeySimulation(keyPressed.key)
                     break;
                 case "ArrowUp":
@@ -36,7 +31,7 @@ class CardAnimationController {
     // So the user can use the arrow keys to navigate (or any other input method, such as the gamepad).
     // Going back and forward on the cards will happen by emulating the TAB and SHIT TAB keys.
 
-    setCardsFocus(){
+    setCardsFocus() {
         this.navbarFocused = 0
         this.cardsFocused = 1
 
@@ -52,7 +47,7 @@ class CardAnimationController {
 
     }
 
-    setNavBarFocus(){
+    setNavBarFocus() {
         this.navbarFocused = 1
         this.cardsFocused = 0
 
@@ -66,46 +61,56 @@ class CardAnimationController {
         this.navToolsChildren[0].focus()
     }
 
-    tabKeySimulation(){
+    tabKeySimulation() {
         const focusedElement = document.activeElement
-
+    
         const tabbableElements = Array.from(document.querySelectorAll('[tabindex], a, button, input, textarea, select, [contenteditable="true"]'))
             .filter(el => el.tabIndex !== -1 && !el.disabled && el.offsetParent !== null)
+    
         const currentIndex = tabbableElements.indexOf(focusedElement)
-        const nextIndex = (currentIndex + 1) % tabbableElements.length
-        tabbableElements[nextIndex]?.focus()
+    
+        if (currentIndex !== -1 && currentIndex < tabbableElements.length - 1) {
+            tabbableElements[currentIndex + 1]?.focus()
+        }
     }
-
-    sTabKeySimulation(keyPressed){
-        // I only know what it does, not how.
+    
+    sTabKeySimulation(keyPressed) {
         const tabbableElements = Array.from(document.querySelectorAll(`
             a[href], button, input, textarea, select, details, [tabindex]:not([tabindex="-1"])
         `)).filter(el => el.tabIndex !== -1 && !el.disabled && el.offsetParent !== null)
+    
         const focusedElement = document.activeElement
         const currentIndex = tabbableElements.indexOf(focusedElement)
-        const nextIndex = keyPressed === 'ArrowRight'
-            ? (currentIndex + 1) % tabbableElements.length
-            : (currentIndex - 1 + tabbableElements.length) % tabbableElements.length
-        tabbableElements[nextIndex]?.focus()
+    
+        if (keyPressed === 'ArrowRight' && currentIndex !== -1 && currentIndex < tabbableElements.length - 1) {
+            tabbableElements[currentIndex + 1]?.focus()
+        } else if (keyPressed === 'ArrowLeft' && currentIndex > 0) {
+            tabbableElements[currentIndex - 1]?.focus()
+        }
     }
+    
 
 
-    updateMenu() {
-        // Calculate the position to center the selected item in the second slot
-        const itemWidth = this.gameCard[0].offsetWidth
-        console.log("Current index: " + this.currentIndex)
-        const offset = -(this.currentIndex - 1) * (itemWidth + 20)
-        console.log("Offset: " + offset)
-        console.log("item width:" + itemWidth)
-        
-        // Update the menu container's position
-        this.cardCarousel.style.transform = `translateX(${offset}px)`
+    FixSecondCard(right) {
+        if (this.cardsFocused){
+            if (right){
+                // Goes to the next card if it is not the last one.
+                this.currentIndex = (this.currentIndex + 1 > this.gameCard.length) ? this.currentIndex : this.currentIndex + 1
+            }
+            else{ // is left...
+                // Goes to the previous card if it is not the first one.
+                this.currentIndex = (this.currentIndex - 1 === 0) ? this.currentIndex : this.currentIndex - 1
+            }
 
-        // Set the focused item
-        this.gameCard.forEach((item, index) => {
-            item.classList.toggle('focused', index === this.currentIndex)
-        })
+            // Calculate the position to center the selected item in the second slot
+            const itemWidth = this.gameCard[0].offsetWidth
+            let offset = -(this.currentIndex - 1) * (itemWidth + 20)
+
+            // Update the menu container's position
+            this.cardCarousel.style.transform = `translateX(${offset}px)`
+        }
+
     }
 }
 
-module.exports = {CardAnimationController}
+module.exports = { CardAnimationController }
