@@ -1,10 +1,18 @@
+const { Gamepad } = require('../shared/gamepad')
+
 class CardAnimationController {
     constructor(gameCard, navTools) {
+        this.gamepads = []
         this.cardCarousel = document.getElementById('games')
         this.gameCard = gameCard
         this.navToolsChildren = Array.from(navTools.children)
         this.setCardsFocus()
-        this.currentIndex = 1
+        this.currentIndex = 1 
+        this.gamepadLoop = this.gamepadLoop.bind(this); // Bind the animate method to the correct context
+        requestAnimationFrame(this.gamepadLoop)
+
+        window.addEventListener("gamepadconnected", (evt) => this.addGamepad(evt));
+        window.addEventListener('gamepaddisconnected', (evt) => this.removeGamepad(evt))
 
         document.addEventListener("keydown", (keyPressed) => {
             switch (keyPressed.key) {
@@ -26,6 +34,32 @@ class CardAnimationController {
         })
     }
 
+    addGamepad(evt) {  
+        let gamepad = new Gamepad(evt.gamepad)
+        this.gamepads.push(gamepad)
+        requestAnimationFrame(this.gamepadLoop)
+        console.log(evt.gamepad)
+    }
+    
+    removeGamepad(evt) {
+        this.gamepads.map((gamepad) => {
+            if (gamepad.id == evt.id) {
+                this.gamepads.pop(gamepad)
+                return
+            }
+        })
+    }
+
+    gamepadLoop() {
+        if (this.gamepads !== null) {
+            this.gamepads.forEach((gamepad) => {
+                gamepad.update()
+                gamepad.buttonPressed('A')
+            })    
+        }
+        requestAnimationFrame(this.gamepadLoop);
+    }
+    
 
     // The following couple of functions will set the first card or nav-bar item as focused, aswell defining tabindex to 0 and the other's items to -1.
     // So the user can use the arrow keys to navigate (or any other input method, such as the gamepad).
