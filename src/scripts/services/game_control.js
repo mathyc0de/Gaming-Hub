@@ -3,6 +3,7 @@ const { Gamepad } = require('../shared/gamepad')
 class CardAnimationController {
     constructor(gameCard, navTools) {
         this.gamepads = []
+        this.ticks = 0
         this.cardCarousel = document.getElementById('games')
         this.gameCard = gameCard
         this.navToolsChildren = Array.from(navTools.children)
@@ -37,8 +38,6 @@ class CardAnimationController {
     addGamepad(evt) {  
         let gamepad = new Gamepad(evt.gamepad)
         this.gamepads.push(gamepad)
-        requestAnimationFrame(this.gamepadLoop)
-        console.log(evt.gamepad)
     }
     
     removeGamepad(evt) {
@@ -51,10 +50,28 @@ class CardAnimationController {
     }
 
     gamepadLoop() {
-        if (this.gamepads !== null) {
-            this.gamepads.forEach((gamepad) => {
-                gamepad.update()
-                gamepad.buttonPressed('A')
+        this.ticks += 1
+        let gamepads = navigator.getGamepads();
+        if (this.gamepads.length > 0 && this.ticks % 17 == 0) {
+            this.gamepads.forEach((gamepad, idx) => {
+                gamepad.update(gamepads[idx])
+                gamepad.buttonPressed(gamepad.buttons[0])
+                switch (gamepad.getAxis()) {
+                    case null:
+                        break
+                    case 'right':
+                        this.sTabKeySimulation('ArrowRight')
+                        break
+                    case 'left':
+                        this.sTabKeySimulation("ArrowLeft")
+                        break
+                    case 'down':
+                        if (this.navbarFocused) this.setCardsFocus('ArrowDown')
+                        break
+                    case 'up':
+                        if (this.cardsFocused) this.setNavBarFocus('ArrowUp')
+                        break
+                }
             })    
         }
         requestAnimationFrame(this.gamepadLoop);

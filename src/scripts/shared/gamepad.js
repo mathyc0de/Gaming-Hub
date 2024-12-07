@@ -2,13 +2,13 @@ class Gamepad {
     constructor(gamepad) {
         this.info = gamepad
         this.turbo = false
-        this.buttons = []
+        this.buttons = gamepad.buttons
         this.buttonsCache = []
         this.buttonsStatus =  []
         this.axesStatus = []
     }
 
-    update() {
+    update(info) {
         // Clear the buttons cache
         this.buttonsCache = [];
       
@@ -21,8 +21,7 @@ class Gamepad {
         this.buttonsStatus = [];
       
         // Get the gamepad object
-        const c = this.info || {};
-      
+        const c = this.info = info || {};
         // Loop through buttons and push the pressed ones to the array
         const pressed = [];
         if (c.buttons) {
@@ -56,6 +55,7 @@ buttonPressed(button, hold) {
     // If we found the button we're looking for
     if (this.buttonsStatus[i] === button) {
       // Set the boolean variable to true
+      console.log('si')
       newPress = true;
 
       // If we want to check the single press
@@ -69,6 +69,24 @@ buttonPressed(button, hold) {
     }
   }
   return newPress;
+}
+
+getAxis() {
+  const threshold = 0.5;
+  let movement = null
+  if (this.axesStatus[0] >= threshold) {
+    movement = 'right'
+  } else if (this.axesStatus[0] <= - threshold) {
+    movement = 'left'
+  }
+  
+  // vertical movement
+  if (this.axesStatus[1] >= threshold) {
+    movement = 'down'
+  } else if (this.axesStatus[1] <= - threshold) {
+    movement = 'up'
+  }
+  return movement
 }
     
 }
