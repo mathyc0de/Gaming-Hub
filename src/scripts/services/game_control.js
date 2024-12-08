@@ -1,9 +1,16 @@
 const { Gamepad } = require('../shared/gamepad')
+const buttons = {
+    A: 'A', B: 'B', X: 'X', Y: 'Y', LB: 'LB', RB: 'RB', LT: 'LT', 
+    RT: 'RT', SELECT: 'SELECT', START: 'START', AXE0: 'AXE0', AXE1: 'AXE1', 
+    ARROWUP: 'ARROWUP', ARROWDOWN: 'ARROWDOWN', ARROWLEFT: 'ARROWLEFT', 
+    ARROWRIGHT: 'ARROWRIGHT', GUIDE: 'GUIDE'
+  }
+
 
 class CardAnimationController {
     constructor(gameCard, navTools) {
-        this.gamepads = []
         this.ticks = 0
+        this.gamepads = []
         this.cardCarousel = document.getElementById('games')
         this.gameCard = gameCard
         this.navToolsChildren = Array.from(navTools.children)
@@ -36,33 +43,60 @@ class CardAnimationController {
     }
 
     addGamepad(evt) {  
+        console.log("ssd")
         let gamepad = new Gamepad(evt.gamepad)
         this.gamepads.push(gamepad)
     }
     
-    removeGamepad(evt) {
-        this.gamepads.map((gamepad) => {
-            if (gamepad.id == evt.id) {
-                this.gamepads.pop(gamepad)
-                return
-            }
-        })
+    // removeGamepad(evt) {
+    //     this.gamepads.map((gamepad) => {
+    //         if (gamepad.id == evt.id) {
+    //             this.gamepads.pop(gamepad)
+    //             return
+    //         }
+    //     })
+    // }
+
+    useTime(interval) {
+        this.ticks += 1
+        if (this.ticks % interval == 0) return true
+        return false
     }
 
-    gamepadLoop() {
-        this.ticks += 1
+    gamepadLoop() {        
         let gamepads = navigator.getGamepads();
-        if (this.gamepads.length > 0 && this.ticks % 17 == 0) {
-            this.gamepads.forEach((gamepad, idx) => {
-                gamepad.update(gamepads[idx])
-                gamepad.buttonPressed(gamepad.buttons[0])
+        if (this.gamepads.length > 0 && this.useTime(17)) {
+            // this.gamepads.forEach((gamepad, idx) => {
+            //     gamepad.update(gamepads[idx])
+            //     gamepad.onPressed().forEach((btn) => {
+            //         switch (btn) {
+            //             case buttons.A:
+            //                 console.log(this.currentIndex - 1)
+            //                 console.log(this.gameCard[this.currentIndex - 1])
+            //                 // this.gameCard[this.currentIndex - 1].click()
+            //                 break
+            //         }
+            //     })
+            const gamepad = this.gamepads[0]
+            gamepad.update(gamepads[0])
+            gamepad.onPressed().forEach((btn) => {
+                switch (btn) {
+                    case buttons.A:
+                        document.activeElement.click()
+                        break
+                    case buttons.GUIDE:
+                        document.querySelector('#home').click()
+                        break
+                }})
                 switch (gamepad.getAxis()) {
                     case null:
                         break
                     case 'right':
+                        this.FixSecondCard('right')
                         this.sTabKeySimulation('ArrowRight')
                         break
                     case 'left':
+                        this.FixSecondCard()
                         this.sTabKeySimulation("ArrowLeft")
                         break
                     case 'down':
@@ -72,7 +106,6 @@ class CardAnimationController {
                         if (this.cardsFocused) this.setNavBarFocus('ArrowUp')
                         break
                 }
-            })    
         }
         requestAnimationFrame(this.gamepadLoop);
     }
