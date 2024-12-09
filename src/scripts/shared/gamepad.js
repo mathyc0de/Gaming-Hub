@@ -11,6 +11,24 @@ const inverse_buttons = {
 }
 
 
+class Actions {
+
+
+  static goHome() {
+      document.querySelector('#home').click()
+  }
+  
+  static goBack() {
+  
+  }
+  
+  static accept() {
+      document.activeElement.click()
+  }
+  
+  }
+
+
 class Gamepad {
     constructor(gamepad) {
         this.info = gamepad
@@ -123,10 +141,76 @@ getAxis() {
   return movement
 }
 
-onPressed() {
-  return this.pressed
+onPressed(button, func, args) {
+  if (this.pressed.findIndex(button) == -1) return;
+  if (args) {
+    func.apply(this, args)
+  }
+  else {
+    func()
+  }
 }
     
 }
 
-module.exports = { Gamepad }
+class GamepadController {
+  constructor() {
+    this.ticks = 0
+    this.gamepads = []
+    window.addEventListener("gamepadconnected", (evt) => this.addGamepad(evt));
+    window.addEventListener('gamepaddisconnected', (evt) => this.removeGamepad(evt))
+  }
+
+  addGamepad(evt) {  
+    let gamepad = new Gamepad(evt.gamepad)
+    this.gamepads.push(gamepad)
+}
+
+  removeGamepad(evt) {
+    this.gamepads.map((gamepad) => {
+        if (gamepad.id == evt.id) {
+            this.gamepads.pop(gamepad)
+            return
+        }
+    })
+}
+
+  useTime(interval) {
+    if (this.ticks % interval == 0) return true
+    return false
+}
+
+  updateLoop() {
+    this.ticks += 1
+    let gamepads = navigator.getGamepads();
+    if (this.gamepads.length > 0 && this.useTime(17)) {
+        // this.gamepads.forEach((gamepad, idx) => {
+        //     gamepad.update(gamepads[idx])
+        //     gamepad.onPressed().forEach((btn) => {
+        //         switch (btn) {
+        //             case buttons.A:
+        //                 console.log(this.currentIndex - 1)
+        //                 console.log(this.gameCard[this.currentIndex - 1])
+        //                 // this.gameCard[this.currentIndex - 1].click()
+        //                 break
+        //         }
+        //     })
+        this.gamepads.forEach((gamepad, idx) => {
+          gamepad.update(gamepads[idx])
+        })
+    }
+
+  }
+  
+  getGamepad(index = 0) {
+    if (this.gamepads.length <= index ) return null
+    return this.gamepads[index]
+  }
+
+  getAllGamepads() {
+    return this.gamepads
+  }
+
+}
+
+module.exports = { Actions, GamepadController } 
