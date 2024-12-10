@@ -1,10 +1,4 @@
-const { Actions, GamepadController } = require('../shared/gamepad')
-const buttons = {
-    A: 'A', B: 'B', X: 'X', Y: 'Y', LB: 'LB', RB: 'RB', LT: 'LT', 
-    RT: 'RT', SELECT: 'SELECT', START: 'START', AXE0: 'AXE0', AXE1: 'AXE1', 
-    ARROWUP: 'ARROWUP', ARROWDOWN: 'ARROWDOWN', ARROWLEFT: 'ARROWLEFT', 
-    ARROWRIGHT: 'ARROWRIGHT', GUIDE: 'GUIDE'
-  }
+const { buttons, Actions, GamepadController } = require('../shared/gamepad')
 
 
 class CardAnimationController {
@@ -40,21 +34,9 @@ class CardAnimationController {
         })
     }
 
-    
-    
-
-    // The following couple of functions will set the first card or nav-bar item as focused, aswell defining tabindex to 0 and the other's items to -1.
-    // So the user can use the arrow keys to navigate (or any other input method, such as the gamepad).
-    // Going back and forward on the cards will happen by emulating the TAB and SHIT TAB keys.
-
-    gamepadLoop() {
-        if (this.gamepadController.gamepads.length > 0) {
-            this.gamepadController.updateLoop()
-            const gamepad = this.gamepadController.getGamepad(0)
-            gamepad.onPressed(buttons.A, Actions.accept)
-            gamepad.onPressed(buttons.GUIDE, Actions.goHome)
-            switch (gamepad.getAxis()) {
-                case null:
+    handleMovement(movement) {
+        switch (movement) {
+            case null:
                     break
                 case 'right':
                     this.FixSecondCard('right')
@@ -70,7 +52,23 @@ class CardAnimationController {
                 case 'up':
                     if (this.cardsFocused) this.setNavBarFocus('ArrowUp')
                     break
-            }
+        }
+    }
+
+    
+    
+
+    // The following couple of functions will set the first card or nav-bar item as focused, aswell defining tabindex to 0 and the other's items to -1.
+    // So the user can use the arrow keys to navigate (or any other input method, such as the gamepad).
+    // Going back and forward on the cards will happen by emulating the TAB and SHIT TAB keys.
+
+    gamepadLoop() {
+        if (this.gamepadController.updateLoop()) { 
+            const gamepad = this.gamepadController.getGamepad(0)
+            gamepad.onPressed(buttons.A, Actions.accept)
+            gamepad.onPressed(buttons.GUIDE, Actions.goHome)
+            gamepad.onAxis(this.handleMovement.bind(this))
+            //bind pega o contexto (this) para poder utilizar as funções definidas nesse escopo
         }
         requestAnimationFrame(this.gamepadLoop);
     }

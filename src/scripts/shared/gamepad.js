@@ -1,8 +1,15 @@
 const buttons = {
-  A: 0, B: 1, X: 2, Y: 3, LB: 4,RB: 5, LT: 6, 
-  RT: 7, SELECT: 8, START: 9, AXE0: 10, AXE1: 11, 
-  ARROWUP: 12, ARROWDOWN: 13, ARROWLEFT: 14, ARROWRIGHT: 15, GUIDE: 16
+  A: 'A', B: 'B', X: 'X', Y: 'Y', LB: 'LB', RB: 'RB', LT: 'LT', 
+  RT: 'RT', SELECT: 'SELECT', START: 'START', AXE0: 'AXE0', AXE1: 'AXE1', 
+  ARROWUP: 'ARROWUP', ARROWDOWN: 'ARROWDOWN', ARROWLEFT: 'ARROWLEFT', 
+  ARROWRIGHT: 'ARROWRIGHT', GUIDE: 'GUIDE'
 }
+
+// const buttons = {
+//   A: 0, B: 1, X: 2, Y: 3, LB: 4,RB: 5, LT: 6, 
+//   RT: 7, SELECT: 8, START: 9, AXE0: 10, AXE1: 11, 
+//   ARROWUP: 12, ARROWDOWN: 13, ARROWLEFT: 14, ARROWRIGHT: 15, GUIDE: 16
+// }
 
 const inverse_buttons = {
   0: 'A', 1: 'B', 2: 'X', 3: 'Y', 4: 'LB', 5: 'RB', 6: 'LT', 
@@ -38,13 +45,20 @@ class Gamepad {
         this.buttonsStatus =  []
         this.axesStatus = []
         this.pressed = []
+        this.ticks = 0
         this.hold = {
           'axis0': 0,
           'axis1': 0,
         }
     }
 
+    useTime(interval) {
+      if (this.ticks % interval == 0) return true
+      return false
+  }
+
     update(info) {
+      this.ticks += 1
         // Clear the buttons cache
         this.buttonsCache = [];
 
@@ -84,55 +98,17 @@ class Gamepad {
         this.buttonsStatus = pressed;
         return pressed;
       }
-      
-
-buttonPressed(button, hold) {
-  let newPress = false;
-
-  // Loop through pressed buttons
-  for (let i = 0; i < this.buttonsStatus.length; i++) {
-    // If we found the button we're looking for
-    if (this.buttonsStatus[i] === button) {
-      // Set the boolean variable to true
-      console.log('si')
-      newPress = true;
-
-      // If we want to check the single press
-      if (!hold) {
-        // Loop through the cached states from the previous frame
-        for (let j = 0; j < this.buttonsCache.length; j++) {
-          // If the button was already pressed, ignore new press
-          newPress = (this.buttonsCache[j] !== button);
-        }
-      }
-    }
-  }
-  return newPress;
-}
-
-// Holding(button) {
-//   switch (this.hold[button]) {
-//     case 0:
-//       console.log("s")
-//       this.hold[button] ++
-//       return true
-//     case 1:
-//       console.log("n")
-//       this.hold[button] = 0
-//       return false
-//   }
-// }
 
 getAxis() {
   const threshold = 0.65;
   let movement = null
+  if (!this.useTime(17)) return;
   if (this.axesStatus[0] >= threshold) {
     movement = 'right'
   } else if (this.axesStatus[0] <= - threshold) {
     movement = 'left'
   }
   
-  // vertical movement
   if (this.axesStatus[1] >= threshold) {
     movement = 'down'
   } else if (this.axesStatus[1] <= - threshold) {
@@ -142,9 +118,20 @@ getAxis() {
 }
 
 onPressed(button, func, args) {
-  if (this.pressed.findIndex(button) == -1) return;
+  if (!this.pressed.find(element => element == button)) return;
   if (args) {
-    func.apply(this, args)
+    func.call(this, args)
+  }
+  else {
+    func()
+  }
+}
+
+onAxis(func, withArgs = true, extraArgs = null) {
+  const movement = this.getAxis()
+  if (!movement) return;
+  if (withArgs) {
+    func.call(this, movement, extraArgs)
   }
   else {
     func()
@@ -155,7 +142,6 @@ onPressed(button, func, args) {
 
 class GamepadController {
   constructor() {
-    this.ticks = 0
     this.gamepads = []
     window.addEventListener("gamepadconnected", (evt) => this.addGamepad(evt));
     window.addEventListener('gamepaddisconnected', (evt) => this.removeGamepad(evt))
@@ -175,31 +161,15 @@ class GamepadController {
     })
 }
 
-  useTime(interval) {
-    if (this.ticks % interval == 0) return true
-    return false
-}
-
   updateLoop() {
-    this.ticks += 1
     let gamepads = navigator.getGamepads();
-    if (this.gamepads.length > 0 && this.useTime(17)) {
-        // this.gamepads.forEach((gamepad, idx) => {
-        //     gamepad.update(gamepads[idx])
-        //     gamepad.onPressed().forEach((btn) => {
-        //         switch (btn) {
-        //             case buttons.A:
-        //                 console.log(this.currentIndex - 1)
-        //                 console.log(this.gameCard[this.currentIndex - 1])
-        //                 // this.gameCard[this.currentIndex - 1].click()
-        //                 break
-        //         }
-        //     })
+    if (this.gamepads.length > 0) {
         this.gamepads.forEach((gamepad, idx) => {
           gamepad.update(gamepads[idx])
         })
+      return true
     }
-
+    return false
   }
   
   getGamepad(index = 0) {
@@ -213,4 +183,4 @@ class GamepadController {
 
 }
 
-module.exports = { Actions, GamepadController } 
+module.exports = { buttons, Actions, GamepadController } 
