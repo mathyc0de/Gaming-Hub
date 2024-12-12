@@ -22,8 +22,8 @@ class Background {
     }
 
     async loadShaders() {
-        vertex = await loader.loadAsync('./shaders/vertex.glsl');
-        fragment = await loader.loadAsync('./shaders/fragment.glsl');
+        vertex = await loader.loadAsync('../../shaders/vertex.glsl');
+        fragment = await loader.loadAsync('../../shaders/fragment.glsl');
     }
 
     createScene() {
