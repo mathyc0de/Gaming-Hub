@@ -119,19 +119,14 @@ getAxis() {
 
 onPressed(button, func, args) {
   if (!this.pressed.find(element => element == button)) return;
-  if (args) {
-    func.call(this, args)
-  }
-  else {
-    func()
-  }
+  func.call(this, args)
 }
 
-onAxis(func, withArgs = true, extraArgs = null) {
+onAxis(func, withArgs = true) {
   const movement = this.getAxis()
   if (!movement) return;
   if (withArgs) {
-    func.call(this, movement, extraArgs)
+    func.call(this, movement)
   }
   else {
     func()
