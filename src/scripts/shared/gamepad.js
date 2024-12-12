@@ -5,6 +5,8 @@ const buttons = {
   ARROWRIGHT: 'ARROWRIGHT', GUIDE: 'GUIDE'
 }
 
+const axisThreshold = 0.65
+
 // const buttons = {
 //   A: 0, B: 1, X: 2, Y: 3, LB: 4,RB: 5, LT: 6, 
 //   RT: 7, SELECT: 8, START: 9, AXE0: 10, AXE1: 11, 
@@ -33,106 +35,75 @@ class Actions {
       document.activeElement.click()
   }
   
-  }
+}
 
 
 class Gamepad {
-    constructor(gamepad) {
-        this.info = gamepad
-        this.turbo = false
-        this.buttons = gamepad.buttons
-        this.buttonsCache = []
-        this.buttonsStatus =  []
-        this.axesStatus = []
-        this.pressed = []
-        this.ticks = 0
-        this.hold = {
-          'axis0': 0,
-          'axis1': 0,
+  constructor(gamepad) {
+    this.info = gamepad
+    this.axesStatus = []
+    this.pressed = []
+    this.ticks = 0
+  }
+
+  useTime(interval) {
+    if (this.ticks % interval == 0) return true
+    return false
+  }
+
+  update(info) {
+    this.ticks ++
+
+    this.axesStatus = []
+
+    this.pressed = []
+
+    const gamepad = this.info = info || {};
+
+    if (gamepad.buttons) {
+      for (let button = 0; button < gamepad.buttons.length; button++) {
+        if (gamepad.buttons[button].pressed) {
+          this.pressed.push(inverse_buttons[button])
         }
+      }
     }
 
-    useTime(interval) {
-      if (this.ticks % interval == 0) return true
-      return false
-  }
-
-    update(info) {
-      this.ticks += 1
-        // Clear the buttons cache
-        this.buttonsCache = [];
-
-      
-        // Move the buttons status from the previous frame to the cache
-        for (let k = 0; k < this.buttonsStatus.length; k++) {
-          this.buttonsCache[k] = this.buttonsStatus[k];
-        }
-      
-        // Clear the buttons status
-        this.buttonsStatus = [];
-        this.pressed = []
-      
-        // Get the gamepad object
-        const c = this.info = info || {};
-        // Loop through buttons and push the pressed ones to the array
-        const pressed = [];
-        if (c.buttons) {
-          for (let b = 0; b < c.buttons.length; b++) {
-            if (c.buttons[b].pressed) {
-              this.pressed.push(inverse_buttons[b])
-              pressed.push(this.buttons[b]);
-            }
-          }
-        }
-      
-        // Loop through axes and push their values to the array
-        const axes = [];
-        if (c.axes) {
-          for (let a = 0; a < c.axes.length; a++) {
-            axes.push(c.axes[a].toFixed(2));
-          }
-        }
-      
-        // Assign received values
-        this.axesStatus = axes;
-        this.buttonsStatus = pressed;
-        return pressed;
+    if (gamepad.axes) {
+      for (let axis = 0; axis < gamepad.axes.length; axis++) {
+        this.axesStatus.push(gamepad.axes[axis].toFixed(2));
       }
+    }
+  }
 
-getAxis() {
-  const threshold = 0.65;
-  let movement = null
-  if (!this.useTime(17)) return;
-  if (this.axesStatus[0] >= threshold) {
-    movement = 'right'
-  } else if (this.axesStatus[0] <= - threshold) {
-    movement = 'left'
-  }
-  
-  if (this.axesStatus[1] >= threshold) {
-    movement = 'down'
-  } else if (this.axesStatus[1] <= - threshold) {
-    movement = 'up'
-  }
-  return movement
-}
-
-onPressed(button, func, args) {
-  if (!this.pressed.find(element => element == button)) return;
-  func.call(this, args)
-}
-
-onAxis(func, withArgs = true) {
-  const movement = this.getAxis()
-  if (!movement) return;
-  if (withArgs) {
-    func.call(this, movement)
-  }
-  else {
-    func()
-  }
-}
+  getAxis() {
+    let movement = null
+    if (!this.useTime(17)) return;
+    if (this.axesStatus[0] >= axisThreshold) {
+      movement = 'right'
+    } else if (this.axesStatus[0] <= - axisThreshold) {
+      movement = 'left'
+    }
     
+    if (this.axesStatus[1] >= axisThreshold) {
+      movement = 'down'
+    } else if (this.axesStatus[1] <= - axisThreshold) {
+      movement = 'up'
+    }
+    return movement
+  }
+
+  onPressed(button, func, args) {
+    if (!this.pressed.find(element => element == button)) return;
+    func.call(this, args)
+  }
+
+  onAxis(func, withArgs = true) {
+    const movement = this.getAxis()
+    if (!movement) return;
+    if (withArgs) func.call(this, movement)
+    else func()
+  }
+
 }
 
 class GamepadController {
@@ -145,7 +116,7 @@ class GamepadController {
   addGamepad(evt) {  
     let gamepad = new Gamepad(evt.gamepad)
     this.gamepads.push(gamepad)
-}
+  }
 
   removeGamepad(evt) {
     this.gamepads.map((gamepad) => {
@@ -154,21 +125,21 @@ class GamepadController {
             return
         }
     })
-}
+  }
 
   updateLoop() {
     let gamepads = navigator.getGamepads();
     if (this.gamepads.length > 0) {
-        this.gamepads.forEach((gamepad, idx) => {
-          gamepad.update(gamepads[idx])
-        })
+      this.gamepads.forEach((gamepad, idx) => {
+        gamepad.update(gamepads[idx])
+      })
       return true
     }
     return false
   }
   
   getGamepad(index = 0) {
-    if (this.gamepads.length <= index ) return null
+    if (this.gamepads.length <= index ) return
     return this.gamepads[index]
   }
 
