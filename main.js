@@ -31,7 +31,6 @@ function createWindow() {
     }
   });
   mainWindow.loadFile('./src/pages/home_page.html');
-  mainWindow.webContents.openDevTools()
   mainWindow.on('resize', () => {})
 }
 
@@ -65,3 +64,9 @@ ipcMain.on('exit-fullscreen', () => {
 ipcMain.on('load-local-url', (event, url) => {
   mainWindow.loadURL(url);
 });
+
+ipcMain.on('open-dev-tools', () => {
+  if (!mainWindow.webContents.isDevToolsOpened()) {
+    mainWindow.webContents.openDevTools()
+  }
+})
