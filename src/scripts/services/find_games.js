@@ -31,7 +31,6 @@ class GameData {
             // this.eaGames
         ]
         libs.forEach(element => {
-            console.log(element.needUpdate)
             if (element.needUpdate) {
                 copy[element.lib] = element.data
             }
