@@ -2,8 +2,18 @@ const fs = require('fs')
 const { GameData } = require('../scripts/services/find_games');
 const {CardAnimationController} = require('../scripts/services/game_control')
 const { join } = require('path')
+const { Page } = require('../scripts/shared/page_controller')
 
 let gameData = new GameData()
+
+
+class HomePage extends Page {
+    constructor() {
+        super()
+    }
+}
+
+new HomePage()
 
 function loadGames() {
   var data = fs.readFileSync(join(process.env.APP_PATH, 'game_data.json'))
