@@ -61,6 +61,10 @@ ipcMain.on('exit-fullscreen', () => {
 });
 
 
+ipcMain.on('back', () => {
+  mainWindow.webContents.navigationHistory.goBack()
+})
+
 ipcMain.on('load-local-url', (event, url) => {
   mainWindow.loadURL(url);
 });
