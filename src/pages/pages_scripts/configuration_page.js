@@ -1,12 +1,19 @@
-const { Gamepad } = require('../scripts/shared/gamepad')
+function changeStmPath() {
+    document.querySelector('.effectiveArea').innerHTML = ''
+}
 
 
-console.log(window.location.pathname)
-const form = document.querySelector(".config-form")
 
-document.addEventListener("submit", (event) => {
-    event.preventDefault();
-    const input = form.querySelector("input");
-    console.log(input.value);
-})
 
+
+
+
+const actions = {
+    stmpath: changeStmPath,
+    color: console.log
+}
+
+const configs = document.querySelectorAll('.config')
+configs.forEach((element) => element.addEventListener('click', (ev) => {
+    actions[element.id].call(this)
+}))
