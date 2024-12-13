@@ -53,11 +53,12 @@ is not to be a vehicle for the distribution of the fonts. */
     border-color: #787878;
   }
 
-  .config:hover {
+  .config:focus, .config:hover {
     color: #bdbebf;
     border-color: #bdbebf;
     cursor: pointer;
   }
+
 
   .divider {
     right: 10%;
