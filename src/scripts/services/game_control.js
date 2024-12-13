@@ -1,11 +1,10 @@
-const { buttons, Actions, GamepadController } = require('../shared/gamepad')
+const { buttons, Actions, gamepadController } =  require('../shared/gamepad')
 const { scrollElements } = require('../shared/element_selector')
 
 
 class CardAnimationController {
     constructor(gameCard, navTools) {
         this.cardIndex = 0
-        this.gamepadController = new GamepadController()
         this.cardCarousel = document.getElementById('games')
         this.gameCard = gameCard
         this.navToolsChildren = Array.from(navTools.children)
@@ -72,8 +71,8 @@ class CardAnimationController {
     
     
     gamepadLoop() {
-        if (this.gamepadController.updateLoop()) { 
-            const gamepad = this.gamepadController.getGamepad(0)
+        if (gamepadController.updateLoop()) { 
+            const gamepad = gamepadController.getGamepad(1)
             gamepad.onPressed(buttons.A, Actions.accept)
             gamepad.onPressed(buttons.GUIDE, Actions.goHome)
             gamepad.onAxis(this.handleMovement.bind(this))
@@ -129,4 +128,4 @@ class CardAnimationController {
     }
 }
 
-module.exports = { CardAnimationController }
+module.exports = { CardAnimationController, gamepadController}
