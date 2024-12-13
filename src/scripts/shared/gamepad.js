@@ -1,3 +1,5 @@
+const { ipcRenderer } = require("electron")
+
 const buttons = {
   A: 'A', B: 'B', X: 'X', Y: 'Y', LB: 'LB', RB: 'RB', LT: 'LT', 
   RT: 'RT', SELECT: 'SELECT', START: 'START', AXE0: 'AXE0', AXE1: 'AXE1', 
@@ -24,11 +26,13 @@ class Actions {
 
 
   static goHome() {
-      document.querySelector('#home').click()
+      const tag = document.createElement('a')
+      tag.href = "./home_page.html"
+      tag.click()
   }
   
   static goBack() {
-  
+    ipcRenderer.send('back')
   }
   
   static accept() {
@@ -108,14 +112,17 @@ class Gamepad {
 
 class GamepadController {
   constructor() {
+    console.log("jkashsfka")
     this.gamepads = []
     window.addEventListener("gamepadconnected", (evt) => this.addGamepad(evt));
     window.addEventListener('gamepaddisconnected', (evt) => this.removeGamepad(evt))
   }
 
-  addGamepad(evt) {  
+  addGamepad(evt) {
+    console.log("Bashdsil ")
     let gamepad = new Gamepad(evt.gamepad)
     this.gamepads.push(gamepad)
+    console.log(this.gamepads)
   }
 
   removeGamepad(evt) {
@@ -149,4 +156,5 @@ class GamepadController {
 
 }
 
-module.exports = { buttons, Actions, GamepadController } 
+const gamepadController = new GamepadController()
+module.exports = { buttons, Actions, GamepadController, gamepadController }
