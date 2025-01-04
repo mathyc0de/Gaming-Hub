@@ -156,5 +156,4 @@ class GamepadController {
 
 }
 
-const gamepadController = new GamepadController()
-module.exports = { buttons, Actions, GamepadController, gamepadController }
+module.exports = { buttons, Actions, GamepadController }

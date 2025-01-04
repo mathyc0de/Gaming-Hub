@@ -25,7 +25,7 @@ function sTabKeySimulation() {
 }
 
 function scrollElements(move) {
-    if (move == 'right') {
+    if (move == 'right' || move == 'down') {
         tabKeySimulation()
         return
     }

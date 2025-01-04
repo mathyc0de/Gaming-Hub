@@ -1,5 +1,5 @@
-const { gamepadController } = require('./src/scripts/services/game_control')
-
+const { GamepadController } = require('../../../src/scripts/shared/gamepad')
+const gamepadController = new GamepadController()
 
 class Page {
     constructor() {

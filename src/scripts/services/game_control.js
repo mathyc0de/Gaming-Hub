@@ -1,18 +1,12 @@
-const { buttons, Actions, gamepadController } =  require('../shared/gamepad')
-const { scrollElements } = require('../shared/element_selector')
-
-
 class CardAnimationController {
-    constructor(gameCard, navTools) {
+    constructor(gameCard, navTools, gamepadController) {
         this.cardIndex = 0
+        this.gamepadController = gamepadController
         this.cardCarousel = document.getElementById('games')
         this.gameCard = gameCard
         this.navToolsChildren = Array.from(navTools.children)
         this.setCardsFocus()
         this.currentIndex = 1
-        this.gamepadLoop = this.gamepadLoop.bind(this)
-        requestAnimationFrame(this.gamepadLoop)
-        document.addEventListener("keydown", (keyPressed) => this.handleKeyboard(keyPressed))
     }
 
     updateCardIndex(side) {
@@ -24,61 +18,6 @@ class CardAnimationController {
                 if (this.cardIndex > 0 && this.cardsFocused) this.cardIndex --
                 break
         } 
-    }
-
-    handleKeyboard(keyPressed) {
-        switch (keyPressed.key) {
-            case "ArrowRight":
-                scrollElements('right')
-                this.updateCardIndex('right')
-                this.lockSecondCard(true)
-                break;
-            case "ArrowLeft":
-                scrollElements('left')
-                this.updateCardIndex('left')
-                this.lockSecondCard(false)
-                break;
-            case "ArrowUp":
-                if (this.cardsFocused) this.setNavBarFocus(keyPressed.key)
-                break
-            case "ArrowDown":
-                if (this.navbarFocused) this.setCardsFocus(keyPressed.key)
-                break
-        }
-    }
-
-    handleMovement(movement) {
-        switch (movement) {
-            case 'right':
-                scrollElements(movement)
-                this.updateCardIndex(movement)
-                this.lockSecondCard(true)
-                break
-            case 'left':
-                scrollElements(movement)
-                this.updateCardIndex(movement)
-                this.lockSecondCard(false)
-                break
-            case 'down':
-                if (this.navbarFocused) this.setCardsFocus('ArrowDown')
-                break
-            case 'up':
-                if (this.cardsFocused) this.setNavBarFocus('ArrowUp')
-                break
-        }
-    }
-
-    
-    
-    gamepadLoop() {
-        if (gamepadController.updateLoop()) { 
-            const gamepad = gamepadController.getGamepad(1)
-            gamepad.onPressed(buttons.A, Actions.accept)
-            gamepad.onPressed(buttons.GUIDE, Actions.goHome)
-            gamepad.onAxis(this.handleMovement.bind(this))
-            //bind pega o contexto (this) para poder utilizar as funções definidas nesse escopo
-        }
-        requestAnimationFrame(this.gamepadLoop);
     }
 
     setCardsFocus() {
@@ -128,4 +67,4 @@ class CardAnimationController {
     }
 }
 
-module.exports = { CardAnimationController, gamepadController}
+module.exports = { CardAnimationController }

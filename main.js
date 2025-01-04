@@ -51,7 +51,7 @@ app.on('window-all-closed', () => {
 ipcMain.on('exit-fullscreen', () => {
   if (mainWindow.isVisible()) {
     mainWindow.hide()
-    tray = new Tray("./src/assets/icon.png")
+    tray = new Tray("./src/assets/icons/icon.png")
     tray.on('click', () => createWindow())
       const contextMenu = Menu.buildFromTemplate([
           { label: "Sair", type: "normal", click: () => app.quit()},
