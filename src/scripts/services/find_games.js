@@ -19,6 +19,8 @@ class GameData {
 
 
     async writeData() {
+        console.log(fs.existsSync(join(process.env.APP_PATH, 'game_data.json')))
+        console.log(process.env.APP_PATH)
         const game_data = process.env.APP_PATH + 'game_data.json'
         let copy = fs.readFileSync(game_data)
         copy = JSON.parse(copy)

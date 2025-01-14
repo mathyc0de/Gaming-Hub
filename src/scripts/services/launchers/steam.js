@@ -63,7 +63,7 @@ class Steam {
             }
             const img = content.data.header_image
             const img_path = path.join(process.env.APP_PATH, 'assets/images/', appid + '.jpg')
-            downloadImage(img, img_path)
+            await downloadImage(img, img_path)
             const script =  launch + appid
             this.data.push({
                 name: content.data.name,

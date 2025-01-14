@@ -4,7 +4,7 @@ const {CardAnimationController} = require('../scripts/services/game_control')
 const { join } = require('path')
 const { Page } = require('../scripts/shared/page_controller')
 const { buttons, Actions } =  require('../scripts/shared/gamepad')
-const { scrollElements } = require('../scripts/shared/element_selector')
+const { scrollElements } = require('../scripts/shared/element_selector');
 
 
 
@@ -44,7 +44,6 @@ class HomePage extends Page {
         card.className = 'card'
         card.id = data[lib][idx].name
         card.addEventListener('click', () => {
-          console.log('stardew clicked');
           ipcRenderer.send('load-local-url', data[lib][idx].script)
           // Add your logic here
       });

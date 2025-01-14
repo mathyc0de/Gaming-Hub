@@ -1,18 +1,28 @@
 const { app, BrowserWindow, Tray, Menu, ipcMain } = require('electron');
 const path = require('path');
-require('dotenv').config()
+const { exec, spawn } = require('child_process');
+const { promisify } = require('util');
+const {config} = require('dotenv')
 
-try {
-  require('electron-reloader')(module)
-} catch (_) {}
-
-if (!process.env.APP_PATH) {
-  console.log("Run setup.ps1(Windows) or setup.sh(Linux) before execute")
-  app.quit()
-}
+config()
 
 let mainWindow;
 let tray;
+
+async function setuṕPath() {
+  if (!process.env.APP_PATH) {
+    switch(process.platform) {
+      case 'linux':
+        promiseExec = promisify(exec)
+        await promiseExec('sh setup.sh')  
+        break;
+      case 'win32':
+        promiseSpawn = promisify(spawn)
+        await promiseSpawn("powershell.exe", ["./setup.ps1"])
+        break;
+    }
+  }
+}
 
 function createWindow() {
     if (tray != null) {
@@ -34,7 +44,12 @@ function createWindow() {
   mainWindow.on('resize', () => {})
 }
 
-app.on('ready', createWindow);
+app.on('ready', async () => {
+  setuṕPath().then((val) => {
+    config()
+    createWindow()
+  })
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
