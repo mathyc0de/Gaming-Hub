@@ -1,20 +1,19 @@
 var gulp = require('gulp');
 var winInstaller = require('electron-winstaller');
-const linuxInstaller = require('electron-installer-debian')
  
 
-gulp.task('create-windows-installer', function (done) {
-    winInstaller.createWindowsInstaller({
-        appDirectory: './node_modules/electron/dist',
+gulp.task('create-windows-installer', async function (done) {
+    await winInstaller.createWindowsInstaller({
+        appDirectory: './dist/gaming_hub-win32-x64',
         outputDirectory: './release',
-        arch: 'ia32',
+        arch: 'x64',
         authors: "Syncfusion",
         version: "1.0.0",
-        iconUrl: "favicon.ico",
-        setupIcon: "favicon.ico",
-        loadingGif: "ele.gif",
-        noMsi:true
-    }).then().catch();
+        // iconUrl: "./src/assets/icons/icon.png",
+        // setupIcon: "./src/assets/icons/icon.png",
+        // loadingGif: "ele.gif",
+        noMsi:false
+    })
 
 
 gulp.task('create-linux-installer', async function(done) {
