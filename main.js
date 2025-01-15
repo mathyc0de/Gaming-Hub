@@ -4,21 +4,41 @@ const { exec, spawn } = require('child_process');
 const { promisify } = require('util');
 const {config} = require('dotenv')
 
-config()
 
+
+config()
 let mainWindow;
 let tray;
 
+
+function promiseSpawn(command, args) {
+  return new Promise((resolve, reject) => {
+    const child = spawn(command, args);
+
+    child.on('close', (code) => {
+      if (code === 0) {
+        resolve();
+      } else {
+        reject(new Error(`Process exited with code ${code}`));
+      }
+    });
+
+    child.on('error', (err) => {
+      reject(err);
+    });
+  });
+}
+
 async function setuṕPath() {
   if (!process.env.APP_PATH) {
+    const dir = path.join(__dirname, './setup')
     switch(process.platform) {
       case 'linux':
         promiseExec = promisify(exec)
-        await promiseExec('sh setup.sh')  
+        await promiseExec(`sh ${dir}.sh`)  
         break;
       case 'win32':
-        promiseSpawn = promisify(spawn)
-        await promiseSpawn("powershell.exe", ["./setup.ps1"])
+        await promiseSpawn("powershell.exe", [`${dir}.ps1`])
         break;
     }
   }
@@ -66,7 +86,7 @@ app.on('window-all-closed', () => {
 ipcMain.on('exit-fullscreen', () => {
   if (mainWindow.isVisible()) {
     mainWindow.hide()
-    tray = new Tray("./src/assets/icons/icon.png")
+    tray = new Tray(path.join(__dirname, './src/assets/icons/icon.png'))
     tray.on('click', () => createWindow())
       const contextMenu = Menu.buildFromTemplate([
           { label: "Sair", type: "normal", click: () => app.quit()},
