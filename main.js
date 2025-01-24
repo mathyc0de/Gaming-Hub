@@ -1,7 +1,6 @@
 const { app, BrowserWindow, Tray, Menu, ipcMain } = require('electron');
 const path = require('path');
-const { exec, spawn } = require('child_process');
-const { promisify } = require('util');
+const { setupPath } = require('./src/scripts/shared/initial_setup')
 const {config} = require('dotenv')
 
 
@@ -11,38 +10,10 @@ let mainWindow;
 let tray;
 
 
-function promiseSpawn(command, args) {
-  return new Promise((resolve, reject) => {
-    const child = spawn(command, args);
-
-    child.on('close', (code) => {
-      if (code === 0) {
-        resolve();
-      } else {
-        reject(new Error(`Process exited with code ${code}`));
-      }
-    });
-
-    child.on('error', (err) => {
-      reject(err);
-    });
-  });
-}
-
-async function setuṕPath() {
-  if (!process.env.APP_PATH) {
-    const dir = path.join(__dirname, './setup')
-    switch(process.platform) {
-      case 'linux':
-        promiseExec = promisify(exec)
-        await promiseExec(`sh ${dir}.sh`)  
-        break;
-      case 'win32':
-        await promiseSpawn("powershell.exe", [`${dir}.ps1`])
-        break;
-    }
+if (!process.env.APP_PATH) {
+  setupPath(process.platform, process.env)
+  config()
   }
-}
 
 function createWindow() {
     if (tray != null) {
@@ -64,12 +35,7 @@ function createWindow() {
   mainWindow.on('resize', () => {})
 }
 
-app.on('ready', async () => {
-  setuṕPath().then((val) => {
-    config()
-    createWindow()
-  })
-});
+app.on('ready', createWindow);
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {

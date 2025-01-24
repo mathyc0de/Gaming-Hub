@@ -20,7 +20,12 @@ class ConfigurationPage extends Page {
     }
 
     changeStmPath() {
-        document.querySelector('.effectiveArea').innerHTML = ''
+        const effectiveArea = document.querySelector('.effectiveArea')
+        effectiveArea.innerHTML = ''
+        const node = document.createElement('div')
+        node.className = 'folders'
+        effectiveArea.appendChild(node)
+        require('../scripts/shared/file_explorer')
     }
 
 

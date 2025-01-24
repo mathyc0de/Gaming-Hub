@@ -2062,6 +2062,11 @@ value-or-function@^4.0.0:
   resolved "https://registry.yarnpkg.com/value-or-function/-/value-or-function-4.0.0.tgz#70836b6a876a010dc3a2b884e7902e9db064378d"
   integrity sha512-aeVK81SIuT6aMJfNo9Vte8Dw0/FZINGBV8BfCraGtqVxIeLAEhJyoWs8SmvRVmXfGss2PmmOwZCuBPbZR+IYWg==
 
+vdf-parser@^1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/vdf-parser/-/vdf-parser-1.2.1.tgz#735ccdf51d08d583672e32748bafb414833b60bd"
+  integrity sha512-g5c73LP8NSebruEiVjOpV6KlN6xgVXBXc5UbexHWzjkatLJR++gUBhg76YqfJ9j4ZLfZ+Hv00592uiDywR+dWg==
+
 vinyl-contents@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/vinyl-contents/-/vinyl-contents-2.0.0.tgz#cc2ba4db3a36658d069249e9e36d9e2b41935d89"

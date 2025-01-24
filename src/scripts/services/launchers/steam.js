@@ -2,6 +2,7 @@ const fs = require('fs')
 const download = require('image-downloader');
 const path = require('path')
 const launch = "steam://rungameid/"
+const VDF = require('vdf-parser');
 
 function downloadImage(url, filepath) {
     return download.image({
@@ -16,41 +17,31 @@ class Steam {
         this.needUpdate = false
     }
 
+    getSteamApps() {
+        const env = process.env
+        const text = fs.readFileSync(path.join(env['ProgramFiles(x86)'], '/Steam/steamapps/', 'libraryfolders.vdf'))
+        const parsed = VDF.parse(text.toString('utf-8'))
+        const libraryfolders = parsed.libraryfolders
+        const apps = []
+        for (let lib in libraryfolders) {
+            console.log(libraryfolders[lib])
+            for (let app in libraryfolders[lib].apps) {
+                apps.push(app)
+            }
+        }
+        return apps
+    }
+
     isUpdated(apps) {
         const app_path = process.env.APP_PATH + 'steamapps.json'
-        if (!fs.existsSync(app_path)) {
-            fs.writeFileSync(app_path, JSON.stringify([]))
-            this.needUpdate = true
-            return false
-        }
         let localApps = fs.readFileSync(app_path)
-        localApps = JSON.parse(localApps)
-        if (apps.toString() == localApps.toString()) return true;
+        if (JSON.stringify(apps) == localApps) return true;
         this.needUpdate = true
-        console.log(this.needUpdate)
         return false; 
     }
 
-    #extractData(acfFiles, path) {
-        const apps = []
-        if (acfFiles == null) return;
-        for (let idx = 0; idx < acfFiles.length; idx++) {
-            const content = fs.readFileSync(path + acfFiles[idx], { encoding: 'utf8', flag: 'r' })
-            const lines = content.split('\n')
-            const appid = lines[2].replace(/\s/g,'').slice(8, -1)
-            apps.push(appid)
-        }
-       return apps 
-    }
-
-    #parseACF(path = process.env.STEAM) {
-        const files = fs.readdirSync(path)
-        const acfFiles = files.filter(file => file.endsWith('.acf'));
-        return this.#extractData(acfFiles, path)
-    }
-
     async #getSteamIDs() {
-        const apps = this.#parseACF();
+        const apps = this.getSteamApps()
         if (this.isUpdated(apps)) return;
         fs.writeFileSync(process.env.APP_PATH + 'steamapps.json', JSON.stringify(apps))
         for (let idx = 0; idx < apps.length; idx++) {
