@@ -11,15 +11,15 @@ function downloadImage(url, filepath) {
     });
 }
 class Steam {
-    constructor() {
+    constructor(path) {
+        this.path = path
         this.data = []
         this.lib = 'steam'
         this.needUpdate = false
     }
 
     getSteamApps() {
-        const env = process.env
-        const text = fs.readFileSync(path.join(env['ProgramFiles(x86)'], '/Steam/steamapps/', 'libraryfolders.vdf'))
+        const text = fs.readFileSync(path.join(this.path, '/steamapps/', 'libraryfolders.vdf'))
         const parsed = VDF.parse(text.toString('utf-8'))
         const libraryfolders = parsed.libraryfolders
         const apps = []
