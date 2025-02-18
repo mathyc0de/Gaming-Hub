@@ -3,32 +3,32 @@ const { Steam } = require('./launchers/steam')
 const { Uplay } = require('./launchers/uplay');
 const { Origin } = require('./launchers/eagames');
 const { Epic } = require('./launchers/epic');
+const path = require('path');
 
 class GameData {
     constructor() {
-        this.steam = new Steam()
-        this.epic = new Epic()
+        this.libs = JSON.parse(fs.readFileSync(path.join(process.env.APP_PATH, 'config.json')))
+        this.steam = new Steam(this.libs.steam)
+        this.epic = new Epic(this.libs.epic)
         this.uplay = new Uplay()
         this.eaGames = new Origin()
     
     }
 
-    async #getSteamData() {
+    async #getData() {
         await this.steam.fetchGames()
+        await this.epic.fetchGames()
     }
 
 
     async writeData() {
-        console.log(fs.existsSync(join(process.env.APP_PATH, 'game_data.json')))
-        console.log(process.env.APP_PATH)
         const game_data = process.env.APP_PATH + 'game_data.json'
-        let copy = fs.readFileSync(game_data)
-        copy = JSON.parse(copy)
-        await this.#getSteamData()
+        let copy = JSON.parse(fs.readFileSync(game_data))
+        await this.#getData()
         const libs = 
         [
-            this.steam
-            // this.epic, 
+            this.steam,
+            this.epic, 
             // this.uplay,
             // this.eaGames
         ]

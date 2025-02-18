@@ -32,8 +32,8 @@ class HomePage extends Page {
     var data = fs.readFileSync(join(process.env.APP_PATH, 'game_data.json'))
     data = JSON.parse(data)
     const libs = [
-      'steam'
-      // 'epic',
+      'steam',
+      'epic',
       // 'eagames',
       // 'uplay'
     ]
