@@ -18,47 +18,45 @@ const path = require("path");
 // }
 
 
-function getLibs(obj) {
+function __getLinuxLibs(obj) {
+    const steam_path = path.join(process.env.HOME, '/.steam/', 'steam/')
+    if (existsSync(steam_path))  obj['steam'] = steam_path
+}
+
+function __getWindowsLibs(obj) {
     try {
-            const steam_path = execSync('reg query "HKEY_CURRENT_USER\\Software\\Valve\\Steam" /v SteamPath')
-                    .toString()
-                    .split('REG_SZ')[1]
-                    .trim();
-                obj['steam'] = steam_path;
-            } catch (error) {
-                console.error("Error finding Steam path in registry:", error);
-            }
+        const steam_path = execSync('reg query "HKEY_CURRENT_USER\\Software\\Valve\\Steam" /v SteamPath')
+                .toString()
+                .split('REG_SZ')[1]
+                .trim();
+            obj['steam'] = steam_path;
+        } catch (error) {
+            console.error("Error finding Steam path in registry:", error);
+        }
     if (existsSync('C:\\ProgramData\\Epic\\EpicGamesLauncher\\Data\\Manifests')) {
         obj['epic'] = 'C:/ProgramData/Epic/EpicGamesLauncher/Data/Manifests/'
     }
 }
 
-
-function linuxSetup() {
-    // mkdirSync("")
-}
-
-function windowsSetup() {
-    const ghub_path = path.join(process.env.LOCALAPPDATA, '/gaming_hub/')
+function setupPath(platform) {
     const lib = {}
-    getLibs(lib)
+    let ghub_path
+    switch (platform) {
+        case 'win32':
+            ghub_path = path.join(process.env.LOCALAPPDATA, '/gaming_hub/')
+            __getWindowsLibs(lib)
+            break
+        case 'linux':
+            ghub_path = path.join(process.env.HOME, '/.local/', 'share/', 'gaming_hub/')
+            __getLinuxLibs(lib)
+            break;
+    }
     mkdirSync(path.join(ghub_path, 'assets/images'), {recursive: true})
     writeFileSync(ghub_path + 'config.json', JSON.stringify(lib))
     writeFileSync(ghub_path + 'steamapps.json', '[]')
     writeFileSync(ghub_path + 'epicapps.json', '[]')
     writeFileSync('.env', `APP_PATH=${ghub_path}`)
     writeFileSync(path.join(ghub_path, 'game_data.json'), '{}')
-}
-
-function setupPath(platform) {
-    switch (platform) {
-        case 'linux':
-            linuxSetup()
-            break
-        case 'win32':
-            windowsSetup()
-            break;
-    }
 }
 
 function refreshLibs() {

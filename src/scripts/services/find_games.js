@@ -10,14 +10,23 @@ class GameData {
         this.libs = JSON.parse(fs.readFileSync(path.join(process.env.APP_PATH, 'config.json')))
         this.steam = new Steam(this.libs.steam)
         this.epic = new Epic(this.libs.epic)
-        this.uplay = new Uplay()
-        this.eaGames = new Origin()
+        this.uplay = new Uplay(this.libs.uplay)
+        this.eaGames = new Origin(this.libs.origin)
+        this.launchers = [
+            this.steam,
+            this.epic,
+            this.uplay,
+            this.eaGames
+        ]
     
     }
 
     async #getData() {
-        await this.steam.fetchGames()
-        await this.epic.fetchGames()
+        for (let idx = 0; idx < this.launchers.length; idx++) {
+            if (this.launchers[idx].path) {
+                await this.launchers[idx].fetchGames()
+            }
+        }
     }
 
 
@@ -29,8 +38,8 @@ class GameData {
         [
             this.steam,
             this.epic, 
-            // this.uplay,
-            // this.eaGames
+            this.uplay,
+            this.eaGames
         ]
         libs.forEach(element => {
             if (element.needUpdate) {
