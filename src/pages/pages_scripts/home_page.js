@@ -30,30 +30,18 @@ class HomePage extends Page {
   loadGames() {
     var data = fs.readFileSync(join(process.env.APP_PATH, 'game_data.json'))
     data = JSON.parse(data)
-    const libs = [
-      'steam',
-      'epic',
-      // 'eagames',
-      // 'uplay'
-    ]
-    libs.forEach(function (lib, _) {
-      for (let idx = 0; idx < data[lib].length; idx++) {
-        // if (idx >= 12) {
-        //   break
-        // }
+    for (const [key, value] of Object.entries(data)) {
+      for (const game of Object.values(data[key])) {
         const parent = document.querySelector('.games')
         const card = document.createElement('div')
         card.className = 'card'
-        card.id = data[lib][idx].name
+        card.id = game.name
         card.addEventListener('click', () => {
-          ipcRenderer.send('load-local-url', data[lib][idx].script)
+          ipcRenderer.send('load-local-url', game.script)
       });
       const img = document.createElement('img')
-      img.src = data[lib][idx].image
-      // const title = document.createElement('h1')
-      // title.textContent = 'Start'
+      img.src = game.image
       card.appendChild(img)
-      // card.appendChild(title)
       parent.appendChild(card)
   
       card.addEventListener('focus', () => {
@@ -73,10 +61,9 @@ class HomePage extends Page {
           card.removeChild(title)
           card.style.boxShadow = ''
         }
-      })
+        })
       }
-    });
-
+    }
   }
   
   handleKeyboard(keyPressed) {
