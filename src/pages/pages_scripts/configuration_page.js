@@ -5,27 +5,29 @@ const { Page } = require('../scripts/shared/page_controller')
 class ConfigurationPage extends Page {
     constructor() {
         super()
-        this.actions = {
-            stmpath: this.changeStmPath,
-            color: console.log
-        }
-        this.configs = document.querySelectorAll('.config')
-        this.configs.forEach((element, idx) => {
+        this.main = document.querySelectorAll('.config')
+        this.main.forEach((element, idx) => {
             element.tabIndex = idx
             element.addEventListener('click', (ev) => {
-            this.actions[element.id].call(this)
+                this.actions[element.id].call(this)
         })
         this.configs[0].focus()
         })
     }
 
-    changeStmPath() {
-        const effectiveArea = document.querySelector('.effectiveArea')
-        effectiveArea.innerHTML = ''
-        const node = document.createElement('div')
-        node.className = 'folders'
-        effectiveArea.appendChild(node)
-        require('../scripts/shared/file_explorer')
+
+    handleKeyboard(keyPressed) {
+        switch (keyPressed.key) {
+            case "ArrowUp":
+                scrollElements('up')
+                break;
+            case "ArrowDown":
+                scrollElements('down')
+                break;
+            case "q":
+                this._goBack()
+                break;
+        }
     }
 
 
@@ -40,6 +42,8 @@ class ConfigurationPage extends Page {
         }
         requestAnimationFrame(this.gamepadLoop);
     }
+
+    
 }
 
 new ConfigurationPage()

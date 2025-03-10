@@ -4,6 +4,10 @@ const { setupPath } = require('./src/scripts/shared/initial_setup')
 const {config} = require('dotenv')
 
 
+try {
+	require('electron-reloader')(module);
+} catch {}
+
 
 config()
 let mainWindow;

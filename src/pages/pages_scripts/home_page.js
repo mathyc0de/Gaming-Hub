@@ -13,12 +13,11 @@ class HomePage extends Page {
       super()
       this.loadGames()
       this.cardController = new CardAnimationController(document.querySelectorAll('.card'), document.getElementById("nav-tools"), this.gamepadController)
-      document.addEventListener("keydown", (keyPressed) => this.handleKeyboard(keyPressed))
     }
 
     gamepadLoop() {
       if (this.gamepadController.updateLoop()) { 
-          const gamepad = this.gamepadController.getGamepad(1)
+          const gamepad = this.gamepadController.getActiveGamepad()
           gamepad.onPressed(buttons.A, Actions.accept)
           gamepad.onPressed(buttons.GUIDE, Actions.goHome)
           gamepad.onPressed(buttons.B, Actions.goBack)
@@ -39,13 +38,15 @@ class HomePage extends Page {
     ]
     libs.forEach(function (lib, _) {
       for (let idx = 0; idx < data[lib].length; idx++) {
+        // if (idx >= 12) {
+        //   break
+        // }
         const parent = document.querySelector('.games')
         const card = document.createElement('div')
         card.className = 'card'
         card.id = data[lib][idx].name
         card.addEventListener('click', () => {
           ipcRenderer.send('load-local-url', data[lib][idx].script)
-          // Add your logic here
       });
       const img = document.createElement('img')
       img.src = data[lib][idx].image
@@ -75,6 +76,7 @@ class HomePage extends Page {
       })
       }
     });
+
   }
   
   handleKeyboard(keyPressed) {

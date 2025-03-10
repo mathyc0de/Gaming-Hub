@@ -7,6 +7,7 @@ class Page {
         this.stack = []
         this.effectiveArea = document.querySelector('.effectiveArea')
         this.gamepadLoop = this.gamepadLoop.bind(this)
+        document.addEventListener("keydown", (keyPressed) => this.handleKeyboard(keyPressed))
         requestAnimationFrame(this.gamepadLoop)
     }
 
@@ -23,7 +24,7 @@ class Page {
         this.effectiveArea.innerHTML = ''
     }
 
-    goBack() {
+    _goBack() {
         const index = this.stack.pop()
         if (index) {
             this.effectiveArea.append(index)
