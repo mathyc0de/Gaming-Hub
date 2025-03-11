@@ -133,7 +133,6 @@ body, html {
   display: flex;
   justify-content: center;
   align-items: center;
-  top: 5%;
   margin-left: 3rem;
   margin-right: 3rem;
   padding: 10px;
@@ -159,4 +158,31 @@ body, html {
   position: relative;
   left: 50%;
   top: 50%;
+}
+
+/* user_page.html */
+
+.user-login {
+  display: flex;
+  flex-direction: row;
+  position: relative;
+
+  margin-left: 5rem;
+  margin-right: 5rem;
+  height: max-content;
+  width: 100%;
+  gap: 10px;
+  transition: transform 0.5s ease;
+}
+
+.user-login a {
+  text-decoration: none;
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  color: red;
+  transition: color 0.5s ease;
+}
+
+.user-login a:hover {
+  text-decoration: underline;
+  color: rgba(122.5, 122.5, 122.5, 0.5);
 }
