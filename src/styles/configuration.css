@@ -7,64 +7,57 @@ the fonts or their derivatives to be published under this licence, as long as th
 is not to be a vehicle for the distribution of the fonts. */
 
 .effectiveArea {
-  display: flex;
-    flex-direction: column;
-    justify-content: start;
     position: relative;
-    left: 10%;
-    right: 10%;
+    left: 5%;
+    right: 5%;
     top: 10%;
     width: 100%;
     height: 80%;
+    display: flex;
+    flex-direction: row;
 }
 
-.folder{
-    font-size: 1.5rem;
-    text-decoration: none;
-    margin: 0;
-    color: #ffffff;
-    text-align: start;
-}
 
-.folder:hover {
-    transition: 0.3s;
-    transform: scale(1.3);
-    box-shadow: 5px 0px 30px 0 #000000;
-    cursor: pointer;
-    border-radius: 0.3rem;
+  .main-section{
+    width: 20%;
+    /* display: flex; */
+    /* flex-direction: column; */
+    /* justify-content:  start; */
+    display: flex;
+    flex-direction: column;
   }
-  
-  .folder:focus{
-    transition: 0.3s;
-    transform: scale(1.3);
-    box-shadow: 5px 0px 30px 0 #000000;
-    cursor: pointer;
-    border-radius: 0.3rem;
-  }
+
 
   .config {
+    padding-bottom: 5%;
     font-size: 2rem;
     font-family: "Ubuntu", sans-serif;
     font-weight: 600;
     text-decoration: none;
     margin-top: 0.3rem;
-    color: #787878;
+    color: #c46a6a;
     text-align: start;
-    border-color: #787878;
+    border-color: #6d3535;
+    outline: none;
   }
 
   .config:focus, .config:hover {
-    color: #bdbebf;
-    border-color: #bdbebf;
+    color: #ffffff;
+    border-color: #6e6e6e;
     cursor: pointer;
   }
 
+  hr.vertical {
+    /* display: i; */
+    margin: 0;
+    width: 0;
+    height: 100%;
+  }
 
   .divider {
-    right: 10%;
-    border-top: 2px solid;
+    width: 35%;
+    border-top: 1px solid;
     padding-top: 0px;
     margin: 0px;
-    position: relative;
     border-color: inherit;
   }

@@ -2,19 +2,28 @@
   "name": "gaming_hub",
   "version": "1.0.0",
   "main": "main.js",
+  "description": "Gaming Hub",
   "scripts": {
-    "start": "electron ."
+    "start": "electron .",
+    "build-linux": "electron-packager . gaming_hub --platform linux --arch x64 --overwrite --out dist/",
+    "build-windows": "electron-packager . gaming_hub --platform win32 --arch x64 --overwrite --out dist/",
+    "deb64": "electron-installer-debian --src dist/gaming_hub-linux-x64/ --dest dist/installers/ --arch amd64"
   },
   "repository": "https://github.com/mathyc0de/Gaming-Hub",
   "author": "mathyc0de <mateushackrs7@gmail.com>",
   "license": "MIT",
   "dependencies": {
     "dotenv": "^16.4.5",
-    "electron": "^33.2.0",
     "image-downloader": "^4.3.0",
+    "sqlite": "^5.1.1",
     "three": "^0.170.0"
   },
   "devDependencies": {
-    "electron-reloader": "^1.2.3"
+    "electron": "^33.2.0",
+    "electron-packager": "^17.1.2",
+    "electron-reloader": "^1.2.3",
+    "electron-winstaller": "^5.4.0",
+    "gulp": "^5.0.0",
+    "vdf-parser": "^1.2.1"
   }
 }

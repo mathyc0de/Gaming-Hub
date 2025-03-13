@@ -1,41 +1,49 @@
 const { scrollElements } = require('../scripts/shared/element_selector')
 const { buttons,  Actions } = require('../scripts/shared/gamepad')
-const { gamepadController } = require('../scripts/services/game_control')
+const { Page } = require('../scripts/shared/page_controller')
 
-function gamepadLoop() {
-    if (gamepadController.updateLoop()) { 
-        const gamepad = gamepadController.getGamepad(1)
-        gamepad.onPressed(buttons.A, Actions.accept)
-        gamepad.onPressed(buttons.GUIDE, Actions.goHome)
-        gamepad.onPressed(buttons.B, Actions.goBack)
-        gamepad.onAxis(scrollElements)
-        //bind pega o contexto (this) para poder utilizar as funções definidas nesse escopo
+class ConfigurationPage extends Page {
+    constructor() {
+        super()
+        this.main = document.querySelectorAll('.config')
+        this.main.forEach((element, idx) => {
+            element.tabIndex = idx
+            element.addEventListener('click', (ev) => {
+                this.actions[element.id].call(this)
+        })
+        this.configs[0].focus()
+        })
     }
-    requestAnimationFrame(this.gamepadLoop);
+
+
+    handleKeyboard(keyPressed) {
+        switch (keyPressed.key) {
+            case "ArrowUp":
+                scrollElements('up')
+                break;
+            case "ArrowDown":
+                scrollElements('down')
+                break;
+            case "q":
+                this._goBack()
+                break;
+        }
+    }
+
+
+    gamepadLoop() {
+        if (this.gamepadController.updateLoop()) { 
+            const gamepad = this.gamepadController.getGamepad(1)
+            gamepad.onPressed(buttons.A, Actions.accept)
+            gamepad.onPressed(buttons.GUIDE, Actions.goHome)
+            gamepad.onPressed(buttons.B, Actions.goBack)
+            gamepad.onAxis(scrollElements)
+            //bind pega o contexto (this) para poder utilizar as funções definidas nesse escopo
+        }
+        requestAnimationFrame(this.gamepadLoop);
+    }
+
+    
 }
 
-function changeStmPath() {
-    document.querySelector('.effectiveArea').innerHTML = ''
-}
-
-
-
-
-
-
-
-const actions = {
-    stmpath: changeStmPath,
-    color: console.log
-}
-
-const configs = document.querySelectorAll('.config')
-configs.forEach((element, idx) => {
-    element.tabIndex = idx
-    element.addEventListener('click', (ev) => {
-    actions[element.id].call(this)
-    })
-})
-
-configs[0].focus()
-requestAnimationFrame(gamepadLoop)
+new ConfigurationPage()

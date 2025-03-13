@@ -112,17 +112,14 @@ class Gamepad {
 
 class GamepadController {
   constructor() {
-    console.log("jkashsfka")
     this.gamepads = []
     window.addEventListener("gamepadconnected", (evt) => this.addGamepad(evt));
     window.addEventListener('gamepaddisconnected', (evt) => this.removeGamepad(evt))
   }
 
   addGamepad(evt) {
-    console.log("Bashdsil ")
     let gamepad = new Gamepad(evt.gamepad)
     this.gamepads.push(gamepad)
-    console.log(this.gamepads)
   }
 
   removeGamepad(evt) {
@@ -150,11 +147,17 @@ class GamepadController {
     return this.gamepads[index]
   }
 
+  getActiveGamepad() {
+    this.gamepads.forEach((gamepad) => {
+      if (gamepad.pressed.length > 0) return gamepad
+    })
+    return this.gamepads[0]
+  }
+
   getAllGamepads() {
     return this.gamepads
   }
 
 }
 
-const gamepadController = new GamepadController()
-module.exports = { buttons, Actions, GamepadController, gamepadController }
+module.exports = { buttons, Actions, GamepadController }
