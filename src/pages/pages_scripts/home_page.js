@@ -7,12 +7,69 @@ const { buttons, Actions } =  require('../scripts/shared/gamepad')
 const { scrollElements } = require('../scripts/shared/element_selector');
 
 
+function delay(t, val) {
+  return new Promise(resolve => setTimeout(resolve, t, val));
+}
 
 class HomePage extends Page {
     constructor() {
       super()
       this.loadGames()
       this.cardController = new CardAnimationController(document.querySelectorAll('.card'), document.getElementById("nav-tools"), this.gamepadController)
+    }
+
+    
+
+    runningGame(game, card) {
+      let open = false
+      card.querySelector('h1').textContent = 'Loading'
+      let intervalID = setInterval(() => {
+        const running = ipcRenderer.sendSync('check-game-running', game.script)
+        if (running && !open) {
+
+          card.addEventListener('focus', () => {
+            if (!card.querySelector('h1')) {  // Prevent adding title multiple times
+              const title = document.createElement('h1')
+              title.textContent = 'Stop'
+              card.appendChild(title)
+              title.addEventListener('animationend', () => {
+                card.style.boxShadow = '5px 0px 30px 0 #ffffff';
+              });
+            }
+            else {
+              card.querySelector('h1').textContent = 'Stop'
+            }
+          })
+
+          card.addEventListener('click', () => {
+            ipcRenderer.send('close-steam-game', game.script)
+          }
+        )
+
+          open = true
+
+        }
+        if (!running && open) {
+          card.addEventListener('focus', () => {
+            if (!card.querySelector('h1')) {  // Prevent adding title multiple times
+              const title = document.createElement('h1')
+              title.textContent = 'Start'
+              card.appendChild(title)
+              title.addEventListener('animationend', () => {
+                card.style.boxShadow = '5px 0px 30px 0 #ffffff';
+              });
+            }
+            else {
+              card.querySelector('h1').textContent = 'Start'
+            }
+          })
+          card.addEventListener('click', () => {
+            ipcRenderer.send('load-steam-game', game.script)
+            this.runningGame(game, card)
+          })
+          clearInterval(intervalID)
+        }
+      }, 1000)
     }
 
     gamepadLoop() {
@@ -30,14 +87,15 @@ class HomePage extends Page {
   loadGames() {
     var data = fs.readFileSync(join(process.env.APP_PATH, 'game_data.json'))
     data = JSON.parse(data)
-    for (const [key, value] of Object.entries(data)) {
-      for (const game of Object.values(data[key])) {
+    for (const [lib, value] of Object.entries(data)) {
+      for (const game of Object.values(data[lib])) {
         const parent = document.querySelector('.games')
         const card = document.createElement('div')
         card.className = 'card'
         card.id = game.name
         card.addEventListener('click', () => {
-          ipcRenderer.send('load-local-url', game.script)
+          ipcRenderer.send(lib == 'steam'? 'load-steam-game': 'load-local-url', game.script)
+          this.runningGame(game, card)
       });
       const img = document.createElement('img')
       img.src = game.image

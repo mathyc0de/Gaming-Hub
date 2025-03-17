@@ -1,8 +1,27 @@
-// TODO Integrates the user page with the backend
-// TODO Save cookies
-// TODO Bring sent/solicitations/recieved friends
-// TODO Bring Users online
-// TODO Users profile settings
-// TODO Users privacy settings
-// TODO Bring user's profile
-// ? Maybe bring the login system here
+const { Page } = require('../scripts/shared/page_controller')
+
+class UserPage extends Page {
+    constructor() {
+        super()
+
+    }
+
+    getUserData() {}
+
+}
+
+class LoginPage extends Page {
+    constructor() {
+        super()
+    }
+
+    
+}
+
+
+function isLoggedIn() {
+        return false;
+    }
+
+
+isLoggedIn()? new UserPage() : new LoginPage()

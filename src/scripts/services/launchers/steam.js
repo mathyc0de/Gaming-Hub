@@ -1,7 +1,6 @@
 const fs = require('fs')
 const download = require('image-downloader');
 const path = require('path')
-const launch = "steam://rungameid/"
 const VDF = require('vdf-parser');
 
 function downloadImage(url, filepath) {
@@ -55,13 +54,11 @@ class Steam {
             const img = content.data.header_image
             const img_path = path.join(process.env.APP_PATH, 'assets/images/', appid + '.jpg')
             await downloadImage(img, img_path)
-            const script =  launch + appid
             this.data.push({
                 name: content.data.name,
                 image: img_path,
-                script: script
+                script: appid
             })
-            console.log(this.data)
         }
         return;
     }
