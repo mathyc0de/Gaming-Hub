@@ -1,3 +1,13 @@
+function vh(percent) {
+    var h = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+    return (percent * h) / 100;
+  }
+
+function vw(percent) {
+    var w = Math.max(document.documentElement.clientWidth, window.innerWidth || 0);
+    return (percent * w) / 100;
+  }
+
 class CardAnimationController {
     constructor(gameCard, navTools, gamepadController) {
         this.cardIndex = 0
@@ -17,7 +27,7 @@ class CardAnimationController {
             case 'left':
                 if (this.cardIndex > 0 && this.cardsFocused) this.cardIndex --
                 break
-        } 
+        }
     }
 
     setCardsFocus() {
@@ -60,10 +70,18 @@ class CardAnimationController {
                 this.currentIndex = (this.currentIndex - 1 === 0) ? this.currentIndex : this.currentIndex - 1
             }
             const itemWidth = this.gameCard[0].offsetWidth
-            let offset = -(this.currentIndex - 1) * (itemWidth + 20)
+            let offset = -(this.currentIndex - 1) * (itemWidth - (vw(3.5)))
             this.cardCarousel.style.transform = `translateX(${offset}px)`
         }
+    }
 
+    setCardIdxMouse(card) {
+        this.cardIndex = [...this.gameCard].indexOf(card)
+        this.currentIndex = this.cardIndex + 1
+        const itemWidth = this.gameCard[0].offsetWidth
+        let offset = -(this.currentIndex - 1) * (itemWidth - (vw(3.5)))
+        this.cardCarousel.style.transform = `translateX(${offset}px)`
+        this.gameCard[this.cardIndex].focus()
     }
 }
 

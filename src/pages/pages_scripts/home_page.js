@@ -7,17 +7,32 @@ const { buttons, Actions } =  require('../scripts/shared/gamepad')
 const { scrollElements } = require('../scripts/shared/element_selector');
 
 
-function delay(t, val) {
-  return new Promise(resolve => setTimeout(resolve, t, val));
-}
-
 class HomePage extends Page {
     constructor() {
       super()
       this.loadGames()
       this.cardController = new CardAnimationController(document.querySelectorAll('.card'), document.getElementById("nav-tools"), this.gamepadController)
+      addEventListener('wheel', (event) => {
+        this.preventLostFocus()
+        if (event.deltaY > 0) {
+          scrollElements('right')
+          this.cardController.updateCardIndex('right')
+          this.cardController.lockSecondCard(true)
+        }
+        else {
+          scrollElements('left')
+          this.cardController.updateCardIndex('left')
+          this.cardController.lockSecondCard(false)
+        }
+      })
+      addEventListener('mousemove', () => {
+        document.body.style.cursor = 'default'
+      })
     }
 
+    preventLostFocus() {
+      if (document.activeElement.className != 'card' && document.activeElement.tagName != 'a') this.cardController.setCardsFocus()
+    }
     
 
     runningGame(game, card) {
@@ -112,6 +127,10 @@ class HomePage extends Page {
           });
         }
       })
+
+      // card.addEventListener('mouseenter', () => {
+      //   this.cardController.setCardIdxMouse(card)
+      // })
   
       card.addEventListener('blur', () => {
         const title = card.querySelector('h1')
@@ -125,6 +144,8 @@ class HomePage extends Page {
   }
   
   handleKeyboard(keyPressed) {
+    document.body.style.cursor = 'none'
+    this.preventLostFocus()
     switch (keyPressed.key) {
         case "ArrowRight":
             scrollElements('right')
@@ -146,6 +167,8 @@ class HomePage extends Page {
 }
 
   handleMovement(movement) {
+    document.body.style.cursor = 'none'
+    this.preventLostFocus()
     switch (movement) {
         case 'right':
             scrollElements(movement)

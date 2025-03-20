@@ -73,13 +73,13 @@ body, html {
   }
 }
 
-.card:hover {
+/* .card:hover {
   transition: 0.3s;
   transform: scale(1.3);
   box-shadow: 5px 0px 30px 0 #ffffff;
   cursor: pointer;
   margin: 0 50px;
-}
+} */
 
 .card:focus{
   transition: 0.3s;
