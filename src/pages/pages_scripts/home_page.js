@@ -41,7 +41,7 @@ class HomePage extends Page {
       let intervalID = setInterval(() => {
         const running = ipcRenderer.sendSync('check-game-running', game.script)
         if (running && !open) {
-
+          ipcRenderer.send('exit-fullscreen')
           card.addEventListener('focus', () => {
             if (!card.querySelector('h1')) {  // Prevent adding title multiple times
               const title = document.createElement('h1')
@@ -65,6 +65,7 @@ class HomePage extends Page {
 
         }
         if (!running && open) {
+          ipcRenderer.send('fullscreen')
           card.addEventListener('focus', () => {
             if (!card.querySelector('h1')) {  // Prevent adding title multiple times
               const title = document.createElement('h1')

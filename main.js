@@ -69,6 +69,12 @@ ipcMain.on('exit-fullscreen', () => {
   }
 });
 
+ipcMain.on('fullscreen', () => {
+  mainWindow.show();
+  mainWindow.focus();
+  tray.destroy()
+})
+
 
 ipcMain.on('back', () => {
   mainWindow.webContents.navigationHistory.goBack()
